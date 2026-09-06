@@ -70,3 +70,16 @@ int main(int argc, char **argv)
 	// run() returned because g_running went false -> Server dtor closes fds
 	return (0);
 }
+
+// It assumes Server(int port, const std::string &password) and Server::run() exist 
+// — that's Jakub's class, so the names should match whatever he picks. 
+// If he goes with a different constructor signature, only that one line changes.
+
+// g_running is a global on purpose: a signal handler can't take arguments, 
+// so the poll loop in run() reads it as its while condition. 
+// SIGPIPE is ignored so that a send() to a client who already disconnected doesn't kill the whole server.
+
+// The comment block before server.run() is the role map: 
+// it lists exactly what each of you has to put in the functions that main
+// never calls directly (accept/recv/CRLF splitting for Jakub, parse 
+// + PASS/NICK/USER + PRIVMSG-to-nick for Kata, JOIN/PART/broadcast/KICK/INVITE/TOPIC/MODE for you).
