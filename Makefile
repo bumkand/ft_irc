@@ -2,7 +2,7 @@ CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
 # source files
-SRCS = main.cpp 
+SRCS = main.cpp Ircserv.cpp
 OBJS = $(SRCS:.cpp=.o)
 INCLUDES_DIR = includes/
 
