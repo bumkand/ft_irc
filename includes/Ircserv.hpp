@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <sstream>
+#include <exception>
 #include <unistd.h>
 #include <poll.h>
 #include <netinet/in.h>
@@ -44,6 +45,10 @@ class	Ircserv
 		void	addNewClient();
 		void	existClient();
 
+		class ErrorException : public std::exception
+		{
+			const char* what() const throw();
+		};
 
 
 };

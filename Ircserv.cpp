@@ -43,6 +43,11 @@ Ircserv::~Ircserv()
 	//std::cout << "Destructor called" << std::endl;
 }
 
+const char* Ircserv::ErrorException::what() const throw()
+{
+	return "Error";
+}
+
 // Server socket initialization
 void	Ircserv::initServ(char *arv[])
 {
@@ -51,7 +56,7 @@ void	Ircserv::initServ(char *arv[])
 	if (_port < 0 || _port > 65535)
 	{
 		std::cout << "Error: choose port between 0 - 65535" << std::endl;
-		return ;
+		throw ErrorException();
 	}
 
 	// Create the server socket
@@ -59,7 +64,7 @@ void	Ircserv::initServ(char *arv[])
 	if (_serverSocket < 0)
 	{
 		std::cerr << "Error creating socket" << std::endl;
-		return ;
+		throw ErrorException();
 	}
 	// Defining server address
 	_serverAddress.sin_family = AF_INET;
@@ -70,14 +75,14 @@ void	Ircserv::initServ(char *arv[])
 	if (bind(_serverSocket, (struct sockaddr*)&_serverAddress, sizeof(_serverAddress)) < 0)
 	{
 		std::cerr << "Error binding socket address" << std::endl;
-		return ;
+		throw ErrorException();
 	}
 
 	// Listening for incoming connections
 	if (listen(_serverSocket, 5) < 0)
 	{
 		std::cerr << "Error listening socket" << std::endl;
-		return ;
+		throw ErrorException();
 	}
 
 	// Set pollfd struct to use it as id for clients
@@ -106,12 +111,14 @@ void	Ircserv::servLoop()
 	int ready;
 	while (1)
 	{
+		std::cout << "Before poll" << std::endl;
 		ready = poll(_pfds, MAX_CLIENTS, -1);
 		if (ready < 0)
 		{
 			std::cerr << "Error in poll" << std::endl;
 			return ;
 		}
+		std::cout << "After poll" << std::endl;
 
 		// Adding new client
 		addNewClient();
@@ -174,7 +181,6 @@ void	Ircserv::existClient()
 				std::cout << "Error reading from socket " << _pfds[i].fd << std::endl;
 				close(_pfds[i].fd);
 				_pfds[i].fd = -1;
-				close(_data[i].fd);
 				_data[i].fd = -1;
 				_data[i].str.clear();
 				_activeClients--;
@@ -184,7 +190,6 @@ void	Ircserv::existClient()
 				std::cout << "Client disconect on fd " << _pfds[i].fd << std::endl;
 				close(_pfds[i].fd);
 				_pfds[i].fd = -1;
-				close(_data[i].fd);
 				_data[i].fd = -1;
 				_data[i].str.clear();
 				_activeClients--;
@@ -199,8 +204,9 @@ void	Ircserv::existClient()
 				//else
 				//	std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
 
-				_data[i].str = buffer;
+				_data[i].str.append(buffer, recBite);
 				std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
+				std::cout << "String data from client fd " << _data[i].fd << "--> " << _data[i].str << std::endl;
 			}
 		}
 	}

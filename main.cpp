@@ -5,9 +5,17 @@ int	main(int arc, char *arv[])
 	if (arc != 2)
 		return std::cout << "Wrong amount of arguments" << std::endl, 1;
 	
-	Ircserv	irc;
-	irc.initServ(arv);
-	irc.servLoop();
+	try
+	{
+		Ircserv	irc;
+		irc.initServ(arv);
+		std::cout << "Server inicialized and listening" << std::endl;
+		irc.servLoop();
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << e.what() << std::endl;
+	}
 	
 
 	
