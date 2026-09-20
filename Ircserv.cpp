@@ -15,8 +15,6 @@ Ircserv::Ircserv(const Ircserv& other) :
 {
 	for (int i = 0; i < MAX_CLIENTS; ++i)
 		_pfds[i] = other._pfds[i];
-	for (int i = 0; i < MAX_CLIENTS; ++i)
-		_data[i] = other._data[i];
 	//std::cout << "Copy constructor called" << std::endl;
 }
 
@@ -31,8 +29,6 @@ Ircserv& Ircserv::operator=(const Ircserv& other)
 		_activeClients = other._activeClients;
 		for (int i = 0; i < MAX_CLIENTS; i++)
 			_pfds[i] = other._pfds[i];
-		for (int i = 0; i < MAX_CLIENTS; i++)
-			_data[i] = other._data[i];
 	}
 	//std::cout << "Assigment operator called" << std::endl;
 	return *this;
@@ -98,10 +94,11 @@ void	Ircserv::initServ(char *arv[])
 
 	// Set client data struct
 	for (int i = 0; i < MAX_CLIENTS; i++)
-		_data[i].fd = -1;
-	_data[0].fd = _pfds[0].fd;
-	_data[0].str = "Server Socket";
-
+	{
+		_data[i].setFD(-1);
+	}
+	_data[0].setFD(_pfds[0].fd);
+	_data[0].setStr("Server socket");
 }
 
 void	Ircserv::servLoop()
@@ -149,7 +146,7 @@ void	Ircserv::addNewClient()
 					_pfds[i].fd = _clientSocket;
 					_pfds[i].events = POLLIN;
 					_pfds[i].revents = 0;
-					_data[i].fd = _pfds[i].fd;
+					_data[i].setFD(_pfds[i].fd);
 					added = 1;
 					std::cout << "New client on the slot " << _clientSocket << std::endl;
 					_activeClients++;
@@ -181,8 +178,8 @@ void	Ircserv::existClient()
 				std::cout << "Error reading from socket " << _pfds[i].fd << std::endl;
 				close(_pfds[i].fd);
 				_pfds[i].fd = -1;
-				_data[i].fd = -1;
-				_data[i].str.clear();
+				_data[i].setFD(-1);
+				_data[i].clearStr();
 				_activeClients--;
 			}
 			else if (recBite == 0)
@@ -190,8 +187,8 @@ void	Ircserv::existClient()
 				std::cout << "Client disconect on fd " << _pfds[i].fd << std::endl;
 				close(_pfds[i].fd);
 				_pfds[i].fd = -1;
-				_data[i].fd = -1;
-				_data[i].str.clear();
+				_data[i].setFD(-1);
+				_data[i].clearStr();
 				_activeClients--;
 			}
 			else
@@ -204,9 +201,9 @@ void	Ircserv::existClient()
 				//else
 				//	std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
 
-				_data[i].str.append(buffer, recBite);
+				_data[i].appendStr(buffer, recBite);
 				std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
-				std::cout << "String data from client fd " << _data[i].fd << "--> " << _data[i].str << std::endl;
+				std::cout << "String data from client fd " << _data[i].getFD() << "--> " << _data[i].getStr() << std::endl;
 			}
 		}
 	}

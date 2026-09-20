@@ -10,17 +10,12 @@
 #include <poll.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include "ClientData.hpp"
 
 #define MAX_CLIENTS 100
 
 
-struct	clientData
-{
-	int				fd;
-	std::string		str;
-};
-
-class	Ircserv
+class	Ircserv : public ClientData
 {
 	private:
 		int			_serverSocket;
@@ -29,9 +24,7 @@ class	Ircserv
 		int			_clientSocket;
 		pollfd		_pfds[MAX_CLIENTS];
 		int			_activeClients;
-
-		clientData	_data[MAX_CLIENTS];
-
+		ClientData	_data[MAX_CLIENTS];
 		int			end;
 		
 
@@ -39,7 +32,7 @@ class	Ircserv
 		Ircserv();
 		Ircserv(const Ircserv& other);
 		Ircserv& operator=(const Ircserv& other);
-		~Ircserv();
+		virtual ~Ircserv();
 		void	initServ(char *arv[]);
 		void	servLoop();
 		void	addNewClient();
