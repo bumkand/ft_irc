@@ -1,17 +1,21 @@
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
+SRC_DIR = src
+OBJ_DIR = obj
+INCLUDES_DIR = includes
+
 # source files
 SRCS = main.cpp Ircserv.cpp ClientData.cpp
-OBJS = $(SRCS:.cpp=.o)
-INCLUDES_DIR = includes/
+OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
 
 NAME = ircserv
 
 all: $(NAME)
 
 # compile files
-%.o: %.cpp
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	mkdir -p $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -I $(INCLUDES_DIR) -c $< -o $@
 
 # create the executable
