@@ -15,7 +15,7 @@
 #define MAX_CLIENTS 100
 
 
-class	Ircserv : public ClientData
+class	Ircserv
 {
 	private:
 		int			_serverSocket;
@@ -43,7 +43,8 @@ class	Ircserv : public ClientData
 			const char* what() const throw();
 		};
 
-
+		void 	parse(int i);
+		void	parseCommand(std::string completeCommand);
 };
 
 #endif

@@ -16,8 +16,16 @@ class	ClientData
 	private:
 		int			_fd;
 		std::string	_str;
+		bool		_auth;
+		std::string _username;
+		std::string _nick;
 
 	public:
+		ClientData();
+		ClientData(const ClientData& other);
+		ClientData& operator=(const ClientData& other);
+		virtual ~ClientData();
+
 		void		setFD(const int fd);
 		int			getFD(void) const;
 		void		setStr(const std::string str);

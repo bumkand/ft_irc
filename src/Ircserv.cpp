@@ -14,7 +14,10 @@ Ircserv::Ircserv(const Ircserv& other) :
 	_activeClients(other._activeClients)
 {
 	for (int i = 0; i < MAX_CLIENTS; ++i)
+	{
 		_pfds[i] = other._pfds[i];
+		_data[i] = other._data[i];
+	}
 	//std::cout << "Copy constructor called" << std::endl;
 }
 
@@ -204,6 +207,7 @@ void	Ircserv::existClient()
 				_data[i].appendStr(buffer, recBite);
 				std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
 				std::cout << "String data from client fd " << _data[i].getFD() << "--> " << _data[i].getStr() << std::endl;
+				parse(i);
 			}
 		}
 	}

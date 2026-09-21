@@ -1,5 +1,32 @@
 #include "ClientData.hpp"
 
+ClientData::ClientData()
+{
+	//std::cout << "Default constructor called" << std::endl;
+}
+
+ClientData::ClientData(const ClientData& other) :
+	_fd(other._fd), _str(other._str)
+{
+	//std::cout << "Copy constructor called" << std::endl;
+}
+
+ClientData& ClientData::operator=(const ClientData& other)
+{
+	if (this != &other)
+	{
+		_fd = other._fd;
+		_str = other._str;
+	}
+	//std::cout << "Assigment operator called" << std::endl;
+	return *this;
+}
+
+ClientData::~ClientData()
+{
+	//std::cout << "Destructor called" << std::endl;
+}
+
 void		ClientData::setFD(const int fd)
 {
 	_fd = fd;
