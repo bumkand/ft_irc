@@ -17,8 +17,8 @@ class	ClientData
 		int			_fd;
 		std::string	_str;
 		bool		_auth;
-		std::string _username;
 		std::string _nick;
+		std::string _username; //will be changed
 
 	public:
 		ClientData();
@@ -32,6 +32,7 @@ class	ClientData
 		std::string	getStr(void) const;
 		void		clearStr(void);
 		void		appendStr(char* buffer, ssize_t recBite);
+		void		eraseStr(size_t pos, size_t len);
 
 };
 

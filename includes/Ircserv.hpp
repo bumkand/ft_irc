@@ -44,7 +44,6 @@ class	Ircserv
 		};
 
 		void 	parse(int i);
-		void	parseCommand(std::string completeCommand);
 };
 
 #endif

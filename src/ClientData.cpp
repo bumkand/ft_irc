@@ -1,12 +1,12 @@
 #include "ClientData.hpp"
 
-ClientData::ClientData()
+ClientData::ClientData(): _fd(-1), _auth(0)
 {
 	//std::cout << "Default constructor called" << std::endl;
 }
 
 ClientData::ClientData(const ClientData& other) :
-	_fd(other._fd), _str(other._str)
+	_fd(other._fd), _str(other._str), _auth(other._auth), _nick(other._nick), _username(other._username)
 {
 	//std::cout << "Copy constructor called" << std::endl;
 }
@@ -17,6 +17,9 @@ ClientData& ClientData::operator=(const ClientData& other)
 	{
 		_fd = other._fd;
 		_str = other._str;
+		_auth = other._auth;
+		_nick = other._nick;
+		_username = other._username;
 	}
 	//std::cout << "Assigment operator called" << std::endl;
 	return *this;
@@ -55,4 +58,9 @@ void		ClientData::clearStr(void)
 void		ClientData::appendStr(char* buffer, ssize_t recBite)
 {
 	_str.append(buffer, recBite);
+}
+
+void		ClientData::eraseStr(size_t pos, size_t len)
+{
+	_str.erase(pos, len);
 }
