@@ -12,11 +12,12 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include "ClientData.hpp"
+#include "Message.hpp"
 
 #define MAX_CLIENTS 100
 
 
-class	Ircserv : public ClientData
+class	Ircserv
 {
 	private:
 		int			_serverSocket;
@@ -28,6 +29,7 @@ class	Ircserv : public ClientData
 		int			_activeClients;
 		ClientData	_data[MAX_CLIENTS];
 		
+		void	handleMessage(Message m, size_t i);
 
 	public:
 		Ircserv();
@@ -47,6 +49,7 @@ class	Ircserv : public ClientData
 		void	closeSocket();
 
 
+		void 	parse(size_t i);
 };
 
 	void	signalHandler(int sig);

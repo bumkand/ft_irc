@@ -16,15 +16,29 @@ class	ClientData
 	private:
 		int			_fd;
 		std::string	_str;
+		bool		_registered;
+		std::string _nick;
+		std::string _username; //will be changed
+		std::string _outBuf;
 
 	public:
+		ClientData();
+		ClientData(const ClientData& other);
+		ClientData& operator=(const ClientData& other);
+		virtual ~ClientData();
+
+		const std::string &getNick() const;
+		const std::string &getUser() const;
+		bool 		isRegistered() const;
+
 		void		setFD(const int fd);
 		int			getFD(void) const;
 		void		setStr(const std::string str);
 		std::string	getStr(void) const;
 		void		clearStr(void);
 		void		appendStr(char* buffer, ssize_t recBite);
-
+		void		eraseStr(size_t pos, size_t len);
+		void 		sendMsg(const std::string &msg);
 };
 
 
