@@ -30,6 +30,16 @@ ClientData::~ClientData()
 	//std::cout << "Destructor called" << std::endl;
 }
 
+int			ClientData::getFD(void) const
+{
+	return _fd;
+}
+
+std::string	ClientData::getStr(void) const
+{
+	return _str;
+}
+
 const std::string &ClientData::getNick() const
 {
 	return _nick;
@@ -45,14 +55,14 @@ bool ClientData::isRegistered() const
 	return _registered;
 }
 
+bool ClientData::hasPassed() const
+{
+	return _hasPassed;
+}
+
 void		ClientData::setFD(const int fd)
 {
 	_fd = fd;
-}
-
-int			ClientData::getFD(void) const
-{
-	return _fd;
 }
 
 void		ClientData::setStr(const std::string str)
@@ -60,9 +70,24 @@ void		ClientData::setStr(const std::string str)
 	_str = str;
 }
 
-std::string	ClientData::getStr(void) const
+void		ClientData::setNick(const std::string &nick)
 {
-	return _str;
+	_nick = nick;
+}
+
+void		ClientData::setUser(const std::string &user)
+{
+	_user = user;
+}
+
+void		ClientData::setRegistred(bool registred)
+{
+	_registered = registered;
+}
+
+void		ClientData::setPassed(bool passed)
+{
+	_hasPassed = passed;
 }
 
 void		ClientData::clearStr(void)
@@ -80,7 +105,12 @@ void		ClientData::eraseStr(size_t pos, size_t len)
 	_str.erase(pos, len);
 }
 
-void ClientData::sendMsg(const std::string &msg)
+void		ClientData::clearOutBuf(void)
+{
+	_outBuf.clear();
+}
+
+void		ClientData::sendMsg(const std::string &msg)
 {
 	_outBuf += msg;
 }

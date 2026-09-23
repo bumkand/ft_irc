@@ -52,9 +52,7 @@ static Message parseMessage(const std::string& completeMessage)
 		return m;
 	}
 	else
-	{
 		return m;
-	}
 	parseParams(m, completeMessage, start, end);
 	return m;
 }
@@ -70,7 +68,7 @@ void Ircserv::handleMessage(Message m, size_t i)
 	}
 	switch (j) {
 		case CMD_PASS:
-			// handlePass(m, i);
+			handlePass(m, i);
 			break;
 		case CMD_NICK:
 			// handleNick(m, i);
@@ -79,7 +77,7 @@ void Ircserv::handleMessage(Message m, size_t i)
 			// handleUser(m, i);
 			break;
 		case CMD_CAP:
-			// handleCap(m, i);
+			handleCap(m, i);
 			break;
 		case CMD_PING:
 			// handlePing(m, i);
@@ -98,21 +96,18 @@ void Ircserv::handleMessage(Message m, size_t i)
 			std::cout << "privmsg\n   to:" << m.getParam(0) << "\n   content:" << m.getParam(1) << std::endl;
 			// handlePrivMsg(m, i);
 			break;
-		// case CMD_PASS:
-		// 	handlePass(m, i);
-		// 	break;
-		// case CMD_PASS:
-		// 	handlePass(m, i);
-		// 	break;
-		// case CMD_PASS:
-		// 	handlePass(m, i);
-		// 	break;
-		// case CMD_PASS:
-		// 	handlePass(m, i);
-		// 	break;
-		// case CMD_PASS:
-		// 	handlePass(m, i);
-		// 	break;
+		case CMD_JOIN:
+			break;
+		case CMD_PART:
+			break;
+		case CMD_KICK:
+			break;
+		case CMD_INVITE:
+			break;
+		case CMD_TOPIC:
+			break;
+		case CMD_MODE:
+			break;
 		default:
 			_data[i].sendMsg("cmd not found");
 			std::cerr << "invalid cmd" << std::endl;

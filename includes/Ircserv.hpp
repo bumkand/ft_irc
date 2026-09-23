@@ -30,6 +30,15 @@ class	Ircserv
 		ClientData	_data[MAX_CLIENTS];
 		
 		void	handleMessage(Message m, size_t i);
+		void	handlePass(m, i);
+		// void	handleNick(m, i);
+		// void	handleUser(m, i);
+		void	handleCap(m, i);
+		// void	handlePing(m, i);
+		// void	handlePong(m, i);
+		// void	handleQuit(m, i);
+		// void	handleNotice(m, i);
+		// void	handlePrivMsg(m, i);
 
 	public:
 		Ircserv();
