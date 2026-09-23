@@ -29,16 +29,16 @@ class	Ircserv
 		int			_activeClients;
 		ClientData	_data[MAX_CLIENTS];
 		
-		void	handleMessage(Message m, size_t i);
-		void	handlePass(Message m, size_t i);
-		// void	handleNick(Message m, size_t i);
-		// void	handleUser(Message m, size_t i);
-		void	handleCap(Message m, size_t i);
-		// void	handlePing(Message m, size_t i);
-		// void	handlePong(Message m, size_t i);
-		// void	handleQuit(Message m, size_t i);
-		// void	handleNotice(Message m, size_t i);
-		// void	handlePrivMsg(Message m, size_t i);
+		void	handleMessage(const Message &m, size_t i);
+		void	handlePass(const Message &m, size_t i);
+		// void	handleNick(const Message &m, size_t i);
+		// void	handleUser(const Message &m, size_t i);
+		void	handleCap(const Message &m, size_t i);
+		// void	handlePing(const Message &m, size_t i);
+		// void	handlePong(const Message &m, size_t i);
+		// void	handleQuit(const Message &m, size_t i);
+		// void	handleNotice(const Message &m, size_t i);
+		// void	handlePrivMsg(const Message &m, size_t i);
 
 	public:
 		Ircserv();
