@@ -6,7 +6,9 @@ Message::Message()
 
 Message::Message(const Message &copy)
 {
-	(void) copy;
+	_prefix = copy._prefix;
+	_command = copy._command;
+	_params = copy._params;
 }
 
 
@@ -17,7 +19,12 @@ Message::~Message()
 
 Message & Message::operator=(const Message &assign)
 {
-	(void) assign;
+	if (this != &assign)
+	{
+		_prefix = assign._prefix;
+		_command = assign._command;
+		_params = assign._params;
+	}
 	return *this;
 }
 
