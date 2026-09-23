@@ -65,7 +65,7 @@ void		ClientData::setFD(const int fd)
 	_fd = fd;
 }
 
-void		ClientData::setStr(const std::string str)
+void		ClientData::setStr(const std::string &str)
 {
 	_str = str;
 }
@@ -77,10 +77,10 @@ void		ClientData::setNick(const std::string &nick)
 
 void		ClientData::setUser(const std::string &user)
 {
-	_user = user;
+	_username = user;
 }
 
-void		ClientData::setRegistred(bool registred)
+void		ClientData::setRegistred(bool registered)
 {
 	_registered = registered;
 }

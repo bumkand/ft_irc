@@ -3,15 +3,15 @@
 #include "Message.hpp"
 #include "Replies.hpp"
 
-void	Ircserv::handlePass(m, i)
+void	Ircserv::handlePass(Message m, size_t i)
 {
 	if (_data[i].isRegistered() && _data[i].getNick().empty())
 	{
-		_data[i].sendMsg(ERR_ALREADYREGISTRED("*", "PASS"));
+		_data[i].sendMsg(ERR_ALREADYREGISTRED("*"));
 	}
 	else if (_data[i].isRegistered())
 	{
-		_data[i].sendMsg(ERR_ALREADYREGISTRED(_data[i].getNick(), "PASS"));
+		_data[i].sendMsg(ERR_ALREADYREGISTRED(_data[i].getNick()));
 	}
 	else if (m.getParamSize() < 1 || m.getParam(0).empty())
 	{
@@ -19,19 +19,24 @@ void	Ircserv::handlePass(m, i)
 	}
 	else if (m.getParam(0) != _password)
 	{
-		_data[i].sendMsg(ERR_PASSWDMISMATCH("*", "PASS"));
+		_data[i].sendMsg(ERR_PASSWDMISMATCH("*"));
 	}
 	else
 	{
 		_data[i].setPassed(true);
+		std::cout << "client has passed" << std::endl;
 	}
 }
 
-// void	Ircserv::handleNick(m, i);
-// void	Ircserv::handleUser(m, i);
+// void	Ircserv::handleNick(Message m, size_t i);
+// void	Ircserv::handleUser(Message m, size_t i);
 
-void	Ircserv::handleCap(m, i)
+void	Ircserv::handleCap(Message m, size_t i)
 {
-	_data[i].sendMsg("CAP * LS :\r\n");
+	if (m.getCommand() == "CAP")
+	{
+		_data[i].sendMsg("CAP * LS :\r\n");
+		std::cout << "capabilities established" << std::endl;
+	}
 }
 

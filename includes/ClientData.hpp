@@ -39,7 +39,7 @@ class	ClientData
 		void				setStr(const std::string &str);
 		void				setNick(const std::string &nick);
 		void				setUser(const std::string &user);
-		void				setRegistred(bool registred);
+		void				setRegistred(bool registered);
 		void				setPassed(bool passed);
 
 		void				clearStr(void);
