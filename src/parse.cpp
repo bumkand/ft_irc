@@ -1,6 +1,7 @@
 #include "Ircserv.hpp"
 #include "ClientData.hpp"
 #include "Message.hpp"
+#include "cmdType.hpp"
 
 static void parseParams(Message& m, const std::string& completeMessage, size_t start, size_t end)
 {
@@ -58,7 +59,67 @@ static Message parseMessage(const std::string& completeMessage)
 	return m;
 }
 
-void Ircserv::parse(int i)
+void Ircserv::handleMessage(Message m, size_t i)
+{
+	std::string cmds[15] = {"PASS", "NICK", "USER", "CAP", "PING", "PONG", "QUIT", "NOTICE", "PRIVMSG", "JOIN", "PART", "KICK", "INVITE", "TOPIC", "MODE"};
+	int j;
+	for (j = 0; j < 15; j++) {
+		if (m.getCommand() == cmds[j]) {
+			break;
+		}
+	}
+	switch (j) {
+		case CMD_PASS:
+			// handlePass(m, i);
+			break;
+		case CMD_NICK:
+			// handleNick(m, i);
+			break;
+		case CMD_USER:
+			// handleUser(m, i);
+			break;
+		case CMD_CAP:
+			// handleCap(m, i);
+			break;
+		case CMD_PING:
+			// handlePing(m, i);
+			break;
+		case CMD_PONG:
+			// handlePong(m, i);
+			break;
+		case CMD_QUIT:
+			// handleQuit(m, i);
+			exit(0);
+			break;
+		case CMD_NOTICE:
+			// handleNotice(m, i);
+			break;
+		case CMD_PRIVMSG:
+			std::cout << "privmsg\n   to:" << m.getParam(0) << "\n   content: " << m.getParam(1) << std::endl;
+			// handlePrivMsg(m, i);
+			break;
+		// case CMD_PASS:
+		// 	handlePass(m, i);
+		// 	break;
+		// case CMD_PASS:
+		// 	handlePass(m, i);
+		// 	break;
+		// case CMD_PASS:
+		// 	handlePass(m, i);
+		// 	break;
+		// case CMD_PASS:
+		// 	handlePass(m, i);
+		// 	break;
+		// case CMD_PASS:
+		// 	handlePass(m, i);
+		// 	break;
+		default:
+			_data[i].sendMsg("cmd not found");
+			std::cerr << "invalid cmd" << std::endl;
+	}
+}
+
+void Ircserv::parse(size_t i)
 {
 	size_t pos = _data[i].getStr().find("\r\n");
 
@@ -67,6 +128,7 @@ void Ircserv::parse(int i)
 		std::string completeMessage = _data[i].getStr().substr(0, pos);
 		_data[i].eraseStr(0, pos + 2);
 		Message m = parseMessage(completeMessage);
+		//check if a message is valid (prefix is trully the nick of the client it came from, command is all letters (and not empty), params are correct)
 
 		// std::cout << "prefix: " << m.getPrefix() << std::endl;
 		// std::cout << "command: " << m.getCommand() << std::endl;
@@ -78,7 +140,7 @@ void Ircserv::parse(int i)
 		// }
 		// std::cout << std::endl;
 
-		//handleCommand
+		handleMessage(m, i);
 		pos = _data[i].getStr().find("\r\n");
 	}
 }

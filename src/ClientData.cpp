@@ -1,12 +1,12 @@
 #include "ClientData.hpp"
 
-ClientData::ClientData(): _fd(-1), _auth(0)
+ClientData::ClientData(): _fd(-1), _registered(0)
 {
 	//std::cout << "Default constructor called" << std::endl;
 }
 
 ClientData::ClientData(const ClientData& other) :
-	_fd(other._fd), _str(other._str), _auth(other._auth), _nick(other._nick), _username(other._username)
+	_fd(other._fd), _str(other._str), _registered(other._registered), _nick(other._nick), _username(other._username)
 {
 	//std::cout << "Copy constructor called" << std::endl;
 }
@@ -17,7 +17,7 @@ ClientData& ClientData::operator=(const ClientData& other)
 	{
 		_fd = other._fd;
 		_str = other._str;
-		_auth = other._auth;
+		_registered = other._registered;
 		_nick = other._nick;
 		_username = other._username;
 	}
@@ -28,6 +28,21 @@ ClientData& ClientData::operator=(const ClientData& other)
 ClientData::~ClientData()
 {
 	//std::cout << "Destructor called" << std::endl;
+}
+
+const std::string &ClientData::getNick() const
+{
+	return _nick;
+}
+
+const std::string &ClientData::getUser() const
+{
+	return _username;
+}
+
+bool ClientData::isRegistered() const
+{
+	return _registered;
 }
 
 void		ClientData::setFD(const int fd)
@@ -63,4 +78,9 @@ void		ClientData::appendStr(char* buffer, ssize_t recBite)
 void		ClientData::eraseStr(size_t pos, size_t len)
 {
 	_str.erase(pos, len);
+}
+
+void ClientData::sendMsg(const std::string &msg)
+{
+	_outBuf += msg;
 }

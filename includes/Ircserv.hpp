@@ -11,6 +11,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include "ClientData.hpp"
+#include "Message.hpp"
 
 #define MAX_CLIENTS 100
 
@@ -27,6 +28,7 @@ class	Ircserv
 		ClientData	_data[MAX_CLIENTS];
 		int			end;
 		
+		void	handleMessage(Message m, size_t i);
 
 	public:
 		Ircserv();
@@ -43,7 +45,7 @@ class	Ircserv
 			const char* what() const throw();
 		};
 
-		void 	parse(int i);
+		void 	parse(size_t i);
 };
 
 #endif

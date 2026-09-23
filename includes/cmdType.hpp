@@ -1,0 +1,23 @@
+#ifndef CMDVALUESDEFINE_HPP
+#define CMDVALUESDEFINE_HPP
+
+enum cmdType {
+    CMD_PASS = 0,
+    CMD_NICK,
+    CMD_USER,
+    CMD_CAP,
+    CMD_PING,
+    CMD_PONG,
+    CMD_QUIT,
+    CMD_NOTICE,
+    CMD_PRIVMSG,
+	CMD_JOIN,
+	CMD_PART,
+	CMD_KICK,
+	CMD_INVITE,
+	CMD_TOPIC,
+	CMD_MODE,
+    CMD_UNKNOWN
+};
+
+#endif
