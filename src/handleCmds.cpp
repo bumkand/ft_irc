@@ -28,7 +28,11 @@ void	Ircserv::handlePass(Message m, size_t i)
 	}
 }
 
-// void	Ircserv::handleNick(Message m, size_t i);
+// void	Ircserv::handleNick(Message m, size_t i)
+// {
+
+// }
+
 // void	Ircserv::handleUser(Message m, size_t i);
 
 void	Ircserv::handleCap(Message m, size_t i)
