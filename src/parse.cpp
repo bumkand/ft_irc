@@ -95,7 +95,7 @@ void Ircserv::handleMessage(Message m, size_t i)
 			// handleNotice(m, i);
 			break;
 		case CMD_PRIVMSG:
-			std::cout << "privmsg\n   to:" << m.getParam(0) << "\n   content: " << m.getParam(1) << std::endl;
+			std::cout << "privmsg\n   to:" << m.getParam(0) << "\n   content:" << m.getParam(1) << std::endl;
 			// handlePrivMsg(m, i);
 			break;
 		// case CMD_PASS:

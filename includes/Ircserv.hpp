@@ -47,8 +47,6 @@ class	Ircserv
 		};
 
 		void	closeSocket();
-
-
 		void 	parse(size_t i);
 };
 
