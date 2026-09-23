@@ -2,9 +2,10 @@
 
 int	main(int arc, char *arv[])
 {
-	if (arc != 2)
+	if (arc != 3)
 		return std::cout << "Wrong amount of arguments" << std::endl, 1;
-	
+	signal(SIGINT, signalHandler);
+
 	try
 	{
 		Ircserv	irc;

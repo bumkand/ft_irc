@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <exception>
+#include <csignal>
 #include <unistd.h>
 #include <poll.h>
 #include <netinet/in.h>
@@ -21,11 +22,11 @@ class	Ircserv : public ClientData
 		int			_serverSocket;
 		int			_port;
 		sockaddr_in	_serverAddress;
+		std::string	_password;
 		int			_clientSocket;
 		pollfd		_pfds[MAX_CLIENTS];
 		int			_activeClients;
 		ClientData	_data[MAX_CLIENTS];
-		int			end;
 		
 
 	public:
@@ -43,7 +44,11 @@ class	Ircserv : public ClientData
 			const char* what() const throw();
 		};
 
+		void	closeSocket();
+
 
 };
+
+	void	signalHandler(int sig);
 
 #endif

@@ -1,5 +1,4 @@
 #include "Ircserv.hpp"
-#include <signal.h>
 
 Ircserv::Ircserv()
 {
@@ -44,11 +43,27 @@ const char* Ircserv::ErrorException::what() const throw()
 	return "Error";
 }
 
+void	Ircserv::closeSocket()
+{
+	close(_serverSocket);
+}
+
+void	signalHandler(int sig)
+{
+	std::cout << "Server was termiated by " << sig << std::endl;
+}
+
 // Server socket initialization
 void	Ircserv::initServ(char *arv[])
 {
+	// Save port and password
 	std::stringstream	ss(arv[1]);
 	ss >> _port;
+	ss.str("");
+	ss.clear();
+	ss << arv[2];
+	ss >> _password;
+
 	if (_port < 0 || _port > 65535)
 	{
 		std::cout << "Error: choose port between 0 - 65535" << std::endl;
@@ -108,20 +123,20 @@ void	Ircserv::servLoop()
 	int ready;
 	while (1)
 	{
-		std::cout << "Before poll" << std::endl;
+		//std::cout << "Before poll" << std::endl;
 		ready = poll(_pfds, MAX_CLIENTS, -1);
 		if (ready < 0)
 		{
 			std::cerr << "Error in poll" << std::endl;
 			return ;
 		}
-		std::cout << "After poll" << std::endl;
+		//std::cout << "After poll" << std::endl;
 
 		// Adding new client
 		addNewClient();
 		
 
-		std::cout << "LOOP" << std::endl;
+		//std::cout << "LOOP" << std::endl;
 
 		// Work with existing clients
 		existClient();
