@@ -28,6 +28,39 @@ void	Ircserv::handlePass(const Message &m, size_t i)
 	}
 }
 
+static bool checkNickValidity(const Message &m)
+{
+	std::string nick = m.getParam(0);
+	if (nick.length() > 9)
+	{
+		return false;
+	}
+	if (!(nick[0] >= 'A' && nick[0] <= '}'))
+	{
+		return false;
+	}
+	for (int j = 1; j < nick.length(); j++)
+	{
+		if (!((nick[j] >= 'A' && nick[j] <= '}') || (nick[j] >= '0' && nick[j] <= '9') || nick[j] == '-'))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool Ircserv::checkNickFree(const Message &m, size_t i)
+{
+	for (int j = 0; j < _activeClients; j++)
+	{
+		if (i != j && m.getParam(0) == _data[i].getNick())
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 void	Ircserv::handleNick(const Message &m, size_t i)
 {
 	std::string oldNick = "*";
@@ -48,11 +81,11 @@ void	Ircserv::handleNick(const Message &m, size_t i)
 	{
 		return;
 	}
-	else if (!checkNickValidity(m, i))
+	else if (!checkNickValidity(m))
 	{
 		_data[i].sendMsg(ERR_ERRONEUSNICKNAME(oldNick, m.getParam(0)));
 	}
-	else if (!checkNickFree(m, i))
+	else if (!checkNickFree(m, i, _activeClients))
 	{
 		_data[i].sendMsg(ERR_NICKNAMEINUSE(oldNick, m.getParam(0)));
 	}
