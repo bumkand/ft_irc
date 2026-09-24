@@ -26,12 +26,12 @@ class	Ircserv
 		std::string	_password;
 		int			_clientSocket;
 		pollfd		_pfds[MAX_CLIENTS];
-		int			_activeClients;
+		size_t			_activeClients;
 		ClientData	_data[MAX_CLIENTS];
 		
 		void	handleMessage(const Message &m, size_t i);
 		void	handlePass(const Message &m, size_t i);
-		bool	checkNickFree(const Message &m, size_t i)
+		bool	checkNickFree(const Message &m, size_t i);
 		void	handleNick(const Message &m, size_t i);
 		// void	handleUser(const Message &m, size_t i);
 		void	handleCap(const Message &m, size_t i);
@@ -40,6 +40,8 @@ class	Ircserv
 		// void	handleQuit(const Message &m, size_t i);
 		// void	handleNotice(const Message &m, size_t i);
 		// void	handlePrivMsg(const Message &m, size_t i);
+
+		void 	parse(size_t i);
 
 	public:
 		Ircserv();
@@ -57,7 +59,6 @@ class	Ircserv
 		};
 
 		void	closeSocket();
-		void 	parse(size_t i);
 };
 
 	void	signalHandler(int sig);

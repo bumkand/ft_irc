@@ -39,7 +39,7 @@ static bool checkNickValidity(const Message &m)
 	{
 		return false;
 	}
-	for (int j = 1; j < nick.length(); j++)
+	for (size_t j = 1; j < nick.length(); j++)
 	{
 		if (!((nick[j] >= 'A' && nick[j] <= '}') || (nick[j] >= '0' && nick[j] <= '9') || nick[j] == '-'))
 		{
@@ -51,7 +51,7 @@ static bool checkNickValidity(const Message &m)
 
 bool Ircserv::checkNickFree(const Message &m, size_t i)
 {
-	for (int j = 0; j < _activeClients; j++)
+	for (size_t j = 0; j < _activeClients; j++)
 	{
 		if (i != j && m.getParam(0) == _data[i].getNick())
 		{
@@ -64,33 +64,26 @@ bool Ircserv::checkNickFree(const Message &m, size_t i)
 void	Ircserv::handleNick(const Message &m, size_t i)
 {
 	std::string oldNick = "*";
-	if (!(_data[i].getNick().empty()))
-	{
+	if (!(_data[i].getNick().empty())) {
 		oldNick = _data[i].getNick();
 	}
 
-	if (!(_data[i].getUser().empty()) && !(_data[i].hasPassed()))
-	{
+	if (!(_data[i].getUser().empty()) && !(_data[i].hasPassed())) {
 		_data[i].sendMsg(ERR_NOTREGISTERED(oldNick));
 	}
-	else if (m.getParamSize() < 1 || m.getParam(0).empty())
-	{
+	else if (m.getParamSize() < 1 || m.getParam(0).empty()) {
 		_data[i].sendMsg(ERR_NONICKNAMEGIVEN(oldNick));
 	}
-	else if (_data[i].getNick() == m.getParam(0))
-	{
+	else if (_data[i].getNick() == m.getParam(0)) {
 		return;
 	}
-	else if (!checkNickValidity(m))
-	{
+	else if (!checkNickValidity(m)) {
 		_data[i].sendMsg(ERR_ERRONEUSNICKNAME(oldNick, m.getParam(0)));
 	}
-	else if (!checkNickFree(m, i, _activeClients))
-	{
+	else if (!checkNickFree(m, i)) {
 		_data[i].sendMsg(ERR_NICKNAMEINUSE(oldNick, m.getParam(0)));
 	}
-	else if (!_data[i].isRegistered())
-	{
+	else if (!_data[i].isRegistered()) {
 		_data[i].setNick(m.getParam(0));
 		if (_data[i].hasPassed() && !(_data[i].getUser().empty()))
 		{
@@ -98,12 +91,10 @@ void	Ircserv::handleNick(const Message &m, size_t i)
 			// start the welcome sequence 001, 002, 003
 		}
 	}
-	else
-	{
+	else {
 		_data[i].setNick(m.getParam(0));
 		// change nick everywhere and broadcast to people that the nick has changed
 	}
-
 }
 
 // void	Ircserv::handleUser(const Message &m, size_t i);

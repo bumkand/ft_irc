@@ -80,7 +80,7 @@ void		ClientData::setUser(const std::string &user)
 	_username = user;
 }
 
-void		ClientData::setRegistred(bool registered)
+void		ClientData::setRegistered(bool registered)
 {
 	_registered = registered;
 }

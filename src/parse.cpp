@@ -57,7 +57,7 @@ static Message parseMessage(const std::string& completeMessage)
 	return m;
 }
 
-void Ircserv::handleMessage(Message m, size_t i)
+void Ircserv::handleMessage(const Message& m, size_t i)
 {
 	std::string cmds[15] = {"PASS", "NICK", "USER", "CAP", "PING", "PONG", "QUIT", "NOTICE", "PRIVMSG", "JOIN", "PART", "KICK", "INVITE", "TOPIC", "MODE"};
 	int j;
