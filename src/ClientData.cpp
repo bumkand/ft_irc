@@ -50,6 +50,11 @@ const std::string &ClientData::getUser() const
 	return _username;
 }
 
+const std::string &ClientData::getOutBuf() const
+{
+	return _outBuf;
+}
+
 bool ClientData::isRegistered() const
 {
 	return _registered;

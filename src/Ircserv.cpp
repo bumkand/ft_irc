@@ -212,12 +212,14 @@ void	Ircserv::existClient()
 			else
 			{
 				// Use write to send message back to client on fd (_pfds[i].fd)
-				//int n;
-				//n = write(_pfds[i].fd, "I got your message", 18);
-				//if (n < 0)
-				//	std::cout << "Error writing client" << std::endl;
-				//else
-				//	std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
+				int n;
+				n = write(_pfds[i].fd, _data[i].getOutBuf().c_str(), _data[i].getOutBuf().length());
+				if (n < 0)
+					std::cout << "Error writing client" << std::endl;
+				else
+					_data[i].clearOutBuf();
+					// std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
+
 
 				_data[i].appendStr(buffer, recBite);
 				std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;

@@ -53,6 +53,7 @@ static bool checkNickValidity(const Message &m)
 static std::string my_tolower(const std::string &str)
 {
 	std::string result;
+	result.resize(str.length());
 
 	for (size_t j = 0; j < str.length(); j++)
 	{
@@ -97,7 +98,7 @@ void	Ircserv::handleNick(const Message &m, size_t i)
 	else if (m.getParamSize() < 1 || m.getParam(0).empty()) {
 		_data[i].sendMsg(ERR_NONICKNAMEGIVEN(oldNick));
 	}
-	else if (my_tolower(_data[i].getNick()) == my_tolower(m.getParam(0))) {
+	else if (my_tolower(oldNick) == my_tolower(m.getParam(0))) {
 		_data[i].setNick(m.getParam(0));
 	}
 	else if (!checkNickValidity(m)) {
@@ -123,11 +124,14 @@ void	Ircserv::handleNick(const Message &m, size_t i)
 	}
 }
 
-// void	Ircserv::handleUser(const Message &m, size_t i);
+// void	Ircserv::handleUser(const Message &m, size_t i)
+// {
+
+// }
 
 void	Ircserv::handleCap(const Message &m, size_t i)
 {
-	if (m.getCommand() == "CAP")
+	if (m.getParamSize() > 0 && m.getParam(0) == "LS")
 	{
 		_data[i].sendMsg("CAP * LS :\r\n");
 		std::cout << "capabilities established" << std::endl;//remove

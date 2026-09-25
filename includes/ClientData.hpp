@@ -19,7 +19,8 @@ class	ClientData
 		bool		_hasPassed;
 		bool		_registered;
 		std::string _nick;
-		std::string _username; //will be changed
+		std::string _username;
+		std::string _realname;
 		std::string _outBuf;
 
 	public:
@@ -32,6 +33,7 @@ class	ClientData
 		std::string			getStr(void) const;
 		const std::string	&getNick() const;
 		const std::string 	&getUser() const;
+		const std::string 	&getOutBuf() const;
 		bool 				isRegistered() const;
 		bool 				hasPassed() const;
 
