@@ -165,6 +165,7 @@ void	Ircserv::addNewClient()
 					_pfds[i].events = POLLIN;
 					_pfds[i].revents = 0;
 					_data[i].setFD(_pfds[i].fd);
+					//fill the _data[i]._host with the IP address or the client here please
 					added = 1;
 					std::cout << "New client on the slot " << _clientSocket << std::endl;
 					_activeClients++;

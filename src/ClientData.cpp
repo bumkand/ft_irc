@@ -1,6 +1,6 @@
 #include "ClientData.hpp"
 
-ClientData::ClientData(): _fd(-1), _registered(0)
+ClientData::ClientData(): _fd(-1), _hasPassed(0), _registered(0), _nick("*")
 {
 	//std::cout << "Default constructor called" << std::endl;
 }
@@ -35,7 +35,7 @@ int			ClientData::getFD(void) const
 	return _fd;
 }
 
-std::string	ClientData::getStr(void) const
+const std::string &ClientData::getStr(void) const
 {
 	return _str;
 }
@@ -45,9 +45,19 @@ const std::string &ClientData::getNick() const
 	return _nick;
 }
 
-const std::string &ClientData::getUser() const
+const std::string &ClientData::getUsername() const
 {
 	return _username;
+}
+
+const std::string &ClientData::getRealname() const
+{
+	return _realname;
+}
+
+const std::string &ClientData::getHost() const
+{
+	return _host;
 }
 
 const std::string &ClientData::getOutBuf() const
@@ -80,9 +90,19 @@ void		ClientData::setNick(const std::string &nick)
 	_nick = nick;
 }
 
-void		ClientData::setUser(const std::string &user)
+void		ClientData::setUsername(const std::string &user)
 {
 	_username = user;
+}
+
+void		ClientData::setRealname(const std::string &realname)
+{
+	_realname = realname;
+}
+
+void		ClientData::setHost(const std::string &host)
+{
+	_host = host;
 }
 
 void		ClientData::setRegistered(bool registered)

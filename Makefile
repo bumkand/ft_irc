@@ -8,6 +8,7 @@ INCLUDES_DIR = includes
 # source files
 SRCS = main.cpp Ircserv.cpp ClientData.cpp \
 		parse.cpp Message.cpp handleCmds.cpp \
+		handleNICK.cpp
 
 OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
 

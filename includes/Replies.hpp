@@ -40,6 +40,7 @@ inline std::string numeric(const std::string &code,
 #define ERR_CANNOTSENDTOCHAN(nick, chan) numeric("404", nick, chan + " :Cannot send to channel")
 #define ERR_NORECIPIENT(nick, cmd) numeric("411", nick, ":No recipient given (" + std::string(cmd) + ")")
 #define ERR_NOTEXTTOSEND(nick) numeric("412", nick, ":No text to send")
+#define ERR_UNKNOWNCOMMAND(nick, cmd) numeric("421", nick, std::string(cmd) + " :Unknown command")
 #define ERR_NONICKNAMEGIVEN(nick) numeric("431", nick, ":No nickname given")
 #define ERR_ERRONEUSNICKNAME(nick, wrongNick) numeric("432", nick, std::string(wrongNick) + " :Erroneus nickname")
 #define ERR_NICKNAMEINUSE(nick, duplicateNick) numeric("433", nick, std::string(duplicateNick) + " :Nickname is already in use")

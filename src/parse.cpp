@@ -2,6 +2,26 @@
 #include "ClientData.hpp"
 #include "Message.hpp"
 #include "cmdType.hpp"
+#include "Replies.hpp"
+
+static std::string my_toupper(const std::string &str)
+{
+	std::string result;
+	result.resize(str.length());
+
+	for (size_t j = 0; j < str.length(); j++)
+	{
+		if (str[j] >= 'a'&& str[j] <= '~')
+		{
+			result[j] = str[j] - ('a' - 'A');
+		}
+		else
+		{
+			result[j] = str[j];
+		}
+	}
+	return result;
+}
 
 static void parseParams(Message& m, const std::string& completeMessage, size_t start, size_t end)
 {
@@ -43,12 +63,12 @@ static Message parseMessage(const std::string& completeMessage)
 	end = completeMessage.find(' ', start);
 	if (end != std::string::npos)
 	{
-		m.setCommand(completeMessage.substr(start, end - start));
+		m.setCommand(my_toupper(completeMessage.substr(start, end - start)));
 		start = completeMessage.find_first_not_of(' ', end);
 	}
 	else if (start < completeMessage.length())
 	{
-		m.setCommand(completeMessage.substr(start));
+		m.setCommand(my_toupper(completeMessage.substr(start)));
 		return m;
 	}
 	else
@@ -109,7 +129,7 @@ void Ircserv::handleMessage(const Message& m, size_t i)
 		case CMD_MODE:
 			break;
 		default:
-			_data[i].sendMsg("cmd not found");
+			_data[i].sendMsg(ERR_UNKNOWNCOMMAND(_data[i].getNick(), m.getCommand()));
 			std::cerr << "invalid cmd" << std::endl;
 	}
 }

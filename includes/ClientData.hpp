@@ -21,6 +21,7 @@ class	ClientData
 		std::string _nick;
 		std::string _username;
 		std::string _realname;
+		std::string _host;
 		std::string _outBuf;
 
 	public:
@@ -30,9 +31,11 @@ class	ClientData
 		virtual ~ClientData();
 
 		int					getFD(void) const;
-		std::string			getStr(void) const;
+		const std::string	&getStr(void) const;
 		const std::string	&getNick() const;
-		const std::string 	&getUser() const;
+		const std::string 	&getUsername() const;
+		const std::string 	&getRealname() const;
+		const std::string 	&getHost() const;
 		const std::string 	&getOutBuf() const;
 		bool 				isRegistered() const;
 		bool 				hasPassed() const;
@@ -40,7 +43,9 @@ class	ClientData
 		void				setFD(const int fd);
 		void				setStr(const std::string &str);
 		void				setNick(const std::string &nick);
-		void				setUser(const std::string &user);
+		void				setUsername(const std::string &user);
+		void				setRealname(const std::string &realname);
+		void				setHost(const std::string &host);
 		void				setRegistered(bool registered);
 		void				setPassed(bool passed);
 
