@@ -20,6 +20,7 @@ void	Ircserv::handlePass(const Message &m, size_t i)
 	else if (m.getParam(0) != _password)
 	{
 		_data[i].sendMsg(ERR_PASSWDMISMATCH("*"));
+		std::cout << "wrong server password" << std::endl;//remove
 	}
 	else
 	{
@@ -49,11 +50,33 @@ static bool checkNickValidity(const Message &m)
 	return true;
 }
 
-bool Ircserv::checkNickFree(const Message &m, size_t i)
+static std::string my_tolower(const std::string &str)
+{
+	std::string result;
+
+	for (size_t j = 0; j < str.length(); j++)
+	{
+		if (str[j] >= 'A'&& str[j] <= '^')
+		{
+			result[j] = str[j] + ('a' - 'A');
+		}
+		else
+		{
+			result[j] = str[j];
+		}
+	}
+	return result;
+}
+
+bool Ircserv::checkNickFree(const Message &m)
 {
 	for (size_t j = 0; j < _activeClients; j++)
 	{
-		if (i != j && m.getParam(0) == _data[i].getNick())
+		if (m.getParam(0).length() != _data[j].getNick().length())
+		{
+			continue;
+		}
+		if (my_tolower(m.getParam(0)) == my_tolower(_data[j].getNick()))
 		{
 			return false;
 		}
@@ -74,17 +97,18 @@ void	Ircserv::handleNick(const Message &m, size_t i)
 	else if (m.getParamSize() < 1 || m.getParam(0).empty()) {
 		_data[i].sendMsg(ERR_NONICKNAMEGIVEN(oldNick));
 	}
-	else if (_data[i].getNick() == m.getParam(0)) {
-		return;
+	else if (my_tolower(_data[i].getNick()) == my_tolower(m.getParam(0))) {
+		_data[i].setNick(m.getParam(0));
 	}
 	else if (!checkNickValidity(m)) {
 		_data[i].sendMsg(ERR_ERRONEUSNICKNAME(oldNick, m.getParam(0)));
 	}
-	else if (!checkNickFree(m, i)) {
+	else if (!checkNickFree(m)) {
 		_data[i].sendMsg(ERR_NICKNAMEINUSE(oldNick, m.getParam(0)));
 	}
 	else if (!_data[i].isRegistered()) {
 		_data[i].setNick(m.getParam(0));
+		std::cout << "new client set their nick to: " << _data[i].getNick() << std::endl;//remove
 		if (_data[i].hasPassed() && !(_data[i].getUser().empty()))
 		{
 			_data[i].setRegistered(true);
@@ -93,7 +117,9 @@ void	Ircserv::handleNick(const Message &m, size_t i)
 	}
 	else {
 		_data[i].setNick(m.getParam(0));
-		// change nick everywhere and broadcast to people that the nick has changed
+		std::cout  << "client " << oldNick << " changed their nick to: " << _data[i].getNick() << std::endl;//remove
+		// _data[i].sendMsg(":" + oldNick + "!" + user + "@" + host + " NICK :" + _data[i].getNick());
+		// send ":oldnick!user@host NICK :newnick" to everyone who shares at least one channel with this client
 	}
 }
 
@@ -104,7 +130,7 @@ void	Ircserv::handleCap(const Message &m, size_t i)
 	if (m.getCommand() == "CAP")
 	{
 		_data[i].sendMsg("CAP * LS :\r\n");
-		std::cout << "capabilities established" << std::endl;
+		std::cout << "capabilities established" << std::endl;//remove
 	}
 }
 

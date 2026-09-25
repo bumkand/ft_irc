@@ -31,7 +31,7 @@ class	Ircserv
 		
 		void	handleMessage(const Message &m, size_t i);
 		void	handlePass(const Message &m, size_t i);
-		bool	checkNickFree(const Message &m, size_t i);
+		bool	checkNickFree(const Message &m);
 		void	handleNick(const Message &m, size_t i);
 		// void	handleUser(const Message &m, size_t i);
 		void	handleCap(const Message &m, size_t i);

@@ -71,7 +71,7 @@ void Ircserv::handleMessage(const Message& m, size_t i)
 			handlePass(m, i);
 			break;
 		case CMD_NICK:
-			// handleNick(m, i);
+			handleNick(m, i);
 			break;
 		case CMD_USER:
 			// handleUser(m, i);
