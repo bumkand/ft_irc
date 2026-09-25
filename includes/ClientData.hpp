@@ -39,6 +39,7 @@ class	ClientData
 		const std::string 	&getOutBuf() const;
 		bool 				isRegistered() const;
 		bool 				hasPassed() const;
+		std::string		 	getFullMask() const;
 
 		void				setFD(const int fd);
 		void				setStr(const std::string &str);

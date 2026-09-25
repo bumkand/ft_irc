@@ -75,6 +75,11 @@ bool ClientData::hasPassed() const
 	return _hasPassed;
 }
 
+std::string	 	ClientData::getFullMask() const
+{
+	return _nick + "!" + _username + "@" + _host;
+}
+
 void		ClientData::setFD(const int fd)
 {
 	_fd = fd;
