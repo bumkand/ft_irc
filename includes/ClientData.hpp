@@ -7,6 +7,8 @@
 #include <sstream>
 #include <exception>
 #include <unistd.h>
+#include <string>
+#include <vector>
 #include <poll.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -56,8 +58,13 @@ class	ClientData
 
 		void				clearOutBuf(void);
 		void 				sendMsg(const std::string &msg);
+		void				eraseOutBuf(size_t pos, size_t len);
+
+		void				resetClient(void);
 };
 
-
+std::string my_tolower(const std::string &str);
+std::string my_toupper(const std::string &str);
+std::vector<std::string> split(const std::string& s, char delim);
 
 #endif

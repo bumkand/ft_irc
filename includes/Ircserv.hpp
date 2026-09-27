@@ -37,12 +37,10 @@ class	Ircserv
 		void	handleNick(const Message &m, size_t i);
 		void	handleUser(const Message &m, size_t i);
 		void	handleCap(const Message &m, size_t i);
-
-		// void	handlePing(const Message &m, size_t i);
-		// void	handlePong(const Message &m, size_t i);
-		// void	handleQuit(const Message &m, size_t i);
-		// void	handleNotice(const Message &m, size_t i);
-		// void	handlePrivMsg(const Message &m, size_t i);
+		void	handlePing(const Message &m, size_t i);
+		void	handleQuit(const Message &m, size_t i);
+		void	nickPrivMsg(const std::string &receiver, const std::string &msg);
+		void	handlePrivMsg(const Message &m, size_t i, bool notice);
 
 		void 	parse(size_t i);
 

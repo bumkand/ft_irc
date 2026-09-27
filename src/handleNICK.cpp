@@ -24,28 +24,9 @@ static bool checkNickValidity(const Message &m)
 	return true;
 }
 
-static std::string my_tolower(const std::string &str)
-{
-	std::string result;
-	result.resize(str.length());
-
-	for (size_t j = 0; j < str.length(); j++)
-	{
-		if (str[j] >= 'A'&& str[j] <= '^')
-		{
-			result[j] = str[j] + ('a' - 'A');
-		}
-		else
-		{
-			result[j] = str[j];
-		}
-	}
-	return result;
-}
-
 bool Ircserv::checkNickFree(const Message &m)
 {
-	for (size_t j = 0; j < _activeClients; j++)
+	for (size_t j = 0; j < MAX_CLIENTS; j++)
 	{
 		if (m.getParam(0).length() != _data[j].getNick().length())
 		{
@@ -74,6 +55,7 @@ void	Ircserv::handleNick(const Message &m, size_t i)
 		_data[i].sendMsg(ERR_ERRONEUSNICKNAME(_data[i].getNick(), m.getParam(0)));
 	}
 	else if (!checkNickFree(m)) {
+		std::cout << "duplicit nickname: " << m.getParam(0) << std::endl;//remove
 		_data[i].sendMsg(ERR_NICKNAMEINUSE(_data[i].getNick(), m.getParam(0)));
 	}
 	else if (!_data[i].isRegistered()) {

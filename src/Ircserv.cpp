@@ -109,12 +109,6 @@ void	Ircserv::initServ(char *arv[])
 	}
 	_pfds[0].fd = _serverSocket;
 	_pfds[0].events = POLLIN;
-
-	// Set client data struct
-	for (int i = 0; i < MAX_CLIENTS; i++)
-	{
-		_data[i].setFD(-1);
-	}
 	_data[0].setFD(_pfds[0].fd);
 	_data[0].setStr("Server socket");
 }
@@ -197,8 +191,7 @@ void	Ircserv::existClient()
 				std::cout << "Error reading from socket " << _pfds[i].fd << std::endl;
 				close(_pfds[i].fd);
 				_pfds[i].fd = -1;
-				_data[i].setFD(-1);
-				_data[i].clearStr();
+				_data[i].resetClient();
 				_activeClients--;
 			}
 			else if (recBite == 0)
@@ -206,26 +199,35 @@ void	Ircserv::existClient()
 				std::cout << "Client disconect on fd " << _pfds[i].fd << std::endl;
 				close(_pfds[i].fd);
 				_pfds[i].fd = -1;
-				_data[i].setFD(-1);
-				_data[i].clearStr();
+				_data[i].resetClient();
 				_activeClients--;
 			}
 			else
 			{
-				// Use write to send message back to client on fd (_pfds[i].fd)
-				int n;
-				n = write(_pfds[i].fd, _data[i].getOutBuf().c_str(), _data[i].getOutBuf().length());
-				if (n < 0)
-					std::cout << "Error writing client" << std::endl;
-				else
-					_data[i].clearOutBuf();
-					// std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
-
-
 				_data[i].appendStr(buffer, recBite);
 				std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
 				std::cout << "String data from client fd " << _data[i].getFD() << "--> " << _data[i].getStr() << std::endl;
 				parse(i);
+
+				for (int i = 1; i < MAX_CLIENTS; i++)
+				{
+					if (_pfds[i].fd == -1 || _data[i].getOutBuf().empty())
+						continue;
+					int n = write(_pfds[i].fd, _data[i].getOutBuf().c_str(), _data[i].getOutBuf().length());
+					if (n < 0)
+						std::cout << "Error writing client" << std::endl;
+					else
+						_data[i].eraseOutBuf(0, n);
+				}
+
+				// Use write to send message back to client on fd (_pfds[i].fd)
+				// int n;
+				// n = write(_pfds[i].fd, _data[i].getOutBuf().c_str(), _data[i].getOutBuf().length());
+				// if (n < 0)
+				// 	std::cout << "Error writing client" << std::endl;
+				// else
+				// 	_data[i].eraseOutBuf(0, n);
+				// 	// std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
 			}
 		}
 	}

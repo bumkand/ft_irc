@@ -4,25 +4,6 @@
 #include "cmdType.hpp"
 #include "Replies.hpp"
 
-static std::string my_toupper(const std::string &str)
-{
-	std::string result;
-	result.resize(str.length());
-
-	for (size_t j = 0; j < str.length(); j++)
-	{
-		if (str[j] >= 'a'&& str[j] <= '~')
-		{
-			result[j] = str[j] - ('a' - 'A');
-		}
-		else
-		{
-			result[j] = str[j];
-		}
-	}
-	return result;
-}
-
 static void parseParams(Message& m, const std::string& completeMessage, size_t start, size_t end)
 {
 	end = completeMessage.find(' ', start);
@@ -100,21 +81,18 @@ void Ircserv::handleMessage(const Message& m, size_t i)
 			handleCap(m, i);
 			break;
 		case CMD_PING:
-			// handlePing(m, i);
+			handlePing(m, i);
 			break;
 		case CMD_PONG:
-			// handlePong(m, i);
 			break;
 		case CMD_QUIT:
 			// handleQuit(m, i);
-			exit(0);
 			break;
 		case CMD_NOTICE:
-			// handleNotice(m, i);
+			handlePrivMsg(m, i, true);
 			break;
 		case CMD_PRIVMSG:
-			std::cout << "privmsg\n   to:" << m.getParam(0) << "\n   content:" << m.getParam(1) << std::endl;
-			// handlePrivMsg(m, i);
+			handlePrivMsg(m, i, false);
 			break;
 		case CMD_JOIN:
 			break;
@@ -143,18 +121,11 @@ void Ircserv::parse(size_t i)
 		std::string completeMessage = _data[i].getStr().substr(0, pos);
 		_data[i].eraseStr(0, pos + 2);
 		Message m = parseMessage(completeMessage);
-		//check if a message is valid (prefix is trully the nick of the client it came from, command is all letters (and not empty), params are correct)
-
-		// std::cout << "prefix: " << m.getPrefix() << std::endl;
-		// std::cout << "command: " << m.getCommand() << std::endl;
-		// std::cout << "params: ";
-		// for (size_t j = 0; j < m.getParamSize(); ++j) 
-		// {
-		// 	// Wrapping the string in brackets makes it easy to spot trailing spaces or empty strings
-		// 	std::cout << "[" << m.getParam(j) << "] "; 
-		// }
-		// std::cout << std::endl;
-
+		if (!m.getPrefix().empty() && my_tolower(m.getPrefix()) != my_tolower(_data[i].getNick()))
+		{
+			pos = _data[i].getStr().find("\r\n");
+			continue;
+		}
 		handleMessage(m, i);
 		pos = _data[i].getStr().find("\r\n");
 	}

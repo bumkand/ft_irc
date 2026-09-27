@@ -30,7 +30,7 @@ inline std::string numeric(const std::string &code,
 #define RPL_WELCOME(nick, fullMask) numeric("001", nick, " :Welcome to the Internet Relay Network " + fullMask)
 #define RPL_YOURHOST(nick) numeric("002", nick, " :Your host is " SERVER_NAME ", running version ft_irc-1.0")
 #define RPL_CREATED(nick) numeric("003", nick, " :This server was created Fri Sep 25 2026 at 14:30:00 UTC")
-#define RPL_MYINFO(nick) numeric("004", nick, SERVER_NAME " ft_irc-1.0 * itkol")
+#define RPL_MYINFO(nick) numeric("004", nick, SERVER_NAME " ft_irc-1.0 - itkol")
 
 // good replies = 3xx
 #define RPL_CHANNELMODEIS(nick, chan, modes) numeric("324", nick, chan + " " + modes)

@@ -60,8 +60,31 @@ void	Ircserv::handleCap(const Message &m, size_t i)
 {
 	if (m.getParamSize() > 0 && m.getParam(0) == "LS")
 	{
-		_data[i].sendMsg("CAP * LS :\r\n");
+		_data[i].sendMsg(":" SERVER_NAME " CAP * LS :\r\n");
 		std::cout << "capabilities established" << std::endl;//remove
 	}
 }
 
+void	Ircserv::handlePing(const Message &m, size_t i)
+{
+	std::string parameter = "";
+	if (m.getParamSize() > 0)
+	{
+		parameter = m.getParam(0);
+	}
+	_data[i].sendMsg(":" SERVER_NAME " PONG " SERVER_NAME " :" + parameter + "\r\n");
+}
+
+void	Ircserv::handleQuit(const Message &m, size_t i)
+{
+	std::string quitMgs = _data[i].getNick();
+	if (m.getParamSize() > 0)
+	{
+		quitMgs = m.getParam(0);
+	}
+	// removeClient(_data[i], quitMsg); //jasmine's code
+	_data[i].resetClient();
+	close(_pfds[i].fd);
+	_pfds[i].fd = -1;
+	_activeClients--;
+}

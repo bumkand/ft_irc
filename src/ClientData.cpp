@@ -27,7 +27,15 @@ ClientData& ClientData::operator=(const ClientData& other)
 
 ClientData::~ClientData()
 {
-	//std::cout << "Destructor called" << std::endl;
+	_str = "";
+	_hasPassed = 0;
+	_registered = 0;
+	_nick = "*";
+	_username = "";
+	_realname = "";
+	_host = "";
+	_outBuf = "";
+	_fd = -1;
 }
 
 int			ClientData::getFD(void) const
@@ -143,4 +151,23 @@ void		ClientData::clearOutBuf(void)
 void		ClientData::sendMsg(const std::string &msg)
 {
 	_outBuf += msg;
+}
+
+void		ClientData::eraseOutBuf(size_t pos, size_t len)
+{
+	_outBuf.erase(pos, len);
+}
+
+void		ClientData::resetClient(void)
+{
+	_str = "";
+	_hasPassed = 0;
+	_registered = 0;
+	_nick = "*";
+	_username = "";
+	_realname = "";
+	_host = "";
+	_outBuf = "";
+	_fd = -1;
+
 }
