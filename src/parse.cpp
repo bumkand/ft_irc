@@ -86,7 +86,7 @@ void Ircserv::handleMessage(const Message& m, size_t i)
 		case CMD_PONG:
 			break;
 		case CMD_QUIT:
-			// handleQuit(m, i);
+			handleQuit(m, i);
 			break;
 		case CMD_NOTICE:
 			handlePrivMsg(m, i, true);
