@@ -22,14 +22,14 @@ int main(void)
 		send(clientSocket, message.c_str(), strlen(message.c_str()), 0);
 
 		// Read from socket
-		//int n;
-		//char	buffer[1024];
-		//bzero(buffer, 1024);
-		//n = read(clientSocket, buffer, 1024);
-		//if (n < 0)
-		//	std::cout << "Error reading from socket" << std::endl;
-		//else
-		//	std::cout << buffer << std::endl;
+		int n;
+		char	buffer[1024];
+		bzero(buffer, 1024);
+		n = read(clientSocket, buffer, 1024);
+		if (n < 0)
+			std::cout << "Error reading from socket" << std::endl;
+		else
+			std::cout << buffer << std::endl;
 	}
 
 
