@@ -74,7 +74,7 @@ void	Ircserv::initServ(char *arv[])
 	}
 
 	// Create the server socket
-	_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+	_serverSocket = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
 	if (_serverSocket < 0)
 	{
 		std::cerr << "Error creating socket" << std::endl;
@@ -116,25 +116,19 @@ void	Ircserv::initServ(char *arv[])
 void	Ircserv::servLoop()
 {
 	// Poll and accept client connection in loop
-	//int	clientSocket;
 	int ready;
 	while (1)
 	{
-		//std::cout << "Before poll" << std::endl;
 		ready = poll(_pfds, MAX_CLIENTS, -1);
 		if (ready < 0)
 		{
 			std::cerr << "Error in poll" << std::endl;
 			return ;
 		}
-		//std::cout << "After poll" << std::endl;
 
 		// Adding new client
 		addNewClient();
 		
-
-		//std::cout << "LOOP" << std::endl;
-
 		// Work with existing clients
 		existClient();
 		
@@ -147,7 +141,7 @@ void	Ircserv::addNewClient()
 	{
 		sockaddr_in	clientAddress;
 		socklen_t	addr_len = sizeof(clientAddress);
-		_clientSocket = accept(_serverSocket, (struct sockaddr*)&clientAddress, &addr_len);
+		_clientSocket = accept4(_serverSocket, (struct sockaddr*)&clientAddress, &addr_len, SOCK_NONBLOCK);
 		if (_clientSocket != -1)
 		{
 			int	added = 0;
@@ -208,20 +202,20 @@ void	Ircserv::existClient()
 				std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
 				std::cout << "String data from client fd " << _data[i].getFD() << "--> " << _data[i].getStr() << std::endl;
 				parse(i);
-
-				
 			}
 		}
 	}
 	// Use send to send message back to client on fd (_pfds[i].fd)
 	for (int i = 1; i < MAX_CLIENTS; i++)
 	{
+		if (_pfds[i].fd == -1)
+			continue ;
 		// Check if out buffer isn't empty and change poll events to POLLIN | POLLOUT
 		if (!(_data[i].getOutBuf().empty()))
 		{
 			_pfds[i].events = POLLIN | POLLOUT;
 		}
-		if (_pfds[i].fd != -1 && _pfds[i].revents & POLLOUT)
+		if (_pfds[i].revents & POLLOUT)
 		{
 			ssize_t	sendBite = send(_pfds[i].fd, _data[i].getOutBuf().c_str(), _data[i].getOutBuf().length(), 0);
 			if (sendBite < 0)
