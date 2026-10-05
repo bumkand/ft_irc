@@ -33,6 +33,9 @@ inline std::string numeric(const std::string &code,
 #define RPL_MYINFO(nick) numeric("004", nick, SERVER_NAME " ft_irc-1.0 - itkol")
 
 // good replies = 3xx
+// 352: "<asker> <chan> <user> <host> <server> <nick> <H/@> :<hops> <realname>"
+#define RPL_WHOREPLY(nick, chan, user, host, target, flags, real) numeric("352", nick, chan + " " + user + " " + host + " " SERVER_NAME " " + target + " " + flags + " :0 " + real)
+#define RPL_ENDOFWHO(nick, mask) numeric("315", nick, mask + " :End of WHO list")
 #define RPL_CHANNELMODEIS(nick, chan, modes) numeric("324", nick, chan + " " + modes)
 #define RPL_NOTOPIC(nick, chan) numeric("331", nick, chan + " :No topic is set")
 #define RPL_TOPIC(nick, chan, topic) numeric("332", nick, chan + " :" + topic)

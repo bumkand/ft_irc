@@ -29,5 +29,5 @@ void ChannelManager::privmsg(ClientData *c, const std::string &target,
 		return;
 	}
 	// everyone except the sender, his client already shows what he typed
-	ch->broadcast(prefix(c) + " " + cmd + " " + target + " :" + text + "\r\n", c);
+	ch->broadcast(prefix(c) + " " + cmd + " " + ch->getName() + " :" + text + "\r\n", c);
 }

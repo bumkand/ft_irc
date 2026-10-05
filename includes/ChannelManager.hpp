@@ -22,7 +22,7 @@ struct ModeChanges
 class ChannelManager
 {
 private:
-	std::map<std::string, Channel> _channels; // "#name" -> the channel itself
+	std::map<std::string, Channel> _channels; // "#name" in lowercase -> the channel (#Test == #test)
 	ClientData *_clients; // jakub's _data array, to find people who are in NO channel (INVITE)
 	int _clientCount;    // size of that array (MAX_CLIENTS)
 
@@ -37,6 +37,8 @@ private:
 	bool canJoin(ClientData *c, Channel *ch, const std::string &key);
 	void joinOne(ClientData *c, const std::string &name, const std::string &key);
 	void partOne(ClientData *c, const std::string &name, const std::string &reason);
+
+	void whoChannel(ClientData *c, const std::string &name); // ChannelWHO.cpp
 
 	// MODE helpers (ChannelMODE.cpp)
 	void applyModes(ClientData *c, Channel *ch, const std::vector<std::string> &params, ModeChanges &out);
@@ -62,6 +64,10 @@ public:
 	void kick(ClientData *c, const std::vector<std::string> &params);
 	void invite(ClientData *c, const std::vector<std::string> &params);
 	void mode(ClientData *c, const std::vector<std::string> &params);
+	void who(ClientData *c, const std::vector<std::string> &params);
+
+	// send msg once to everyone who shares a channel with c (not c). QUIT + NICK use it
+	void sendToShared(ClientData *c, const std::string &msg);
 
 	// QUIT or lost connection: call BEFORE resetClient(), the slot gets reused
 	void removeClient(ClientData *c, const std::string &reason);

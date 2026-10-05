@@ -557,6 +557,107 @@ static void testMode()
 	check(has(alice.getOutBuf(), " 461 "), "no params -> 461");
 }
 
+// ============================ sendToShared (NICK) ============================
+// SHOULD:     reach everyone who shares at least 1 channel with him, once each
+// SHOULD NOT: send it to himself, to people in no shared channel, or twice
+static void testShared()
+{
+	ChannelManager mgr;
+	ClientData alice(4, "alice", "al");
+	ClientData bob(5, "bob", "bo");
+	ClientData carol(6, "carol", "ca");
+	ClientData dave(7, "dave", "da");
+
+	std::cout << "--- sendToShared (NICK) ---" << std::endl;
+	mgr.join(&alice, params("#a,#b")); // alice + bob share 2 channels
+	mgr.join(&bob, params("#a,#b"));
+	mgr.join(&carol, params("#b"));    // carol only shares #b
+	mgr.join(&dave, params("#other")); // dave shares nothing
+	alice.clearOutBuf();
+	bob.clearOutBuf();
+	carol.clearOutBuf();
+	dave.clearOutBuf();
+
+	std::string msg = ":alice!al@localhost NICK :alicia\r\n";
+	mgr.sendToShared(&alice, msg);
+	check(bob.getOutBuf() == msg, "bob gets it once (shares 2 channels)");
+	check(carol.getOutBuf() == msg, "carol gets it (shares 1 channel)");
+	check(dave.getOutBuf().empty(), "dave gets nothing (no shared channel)");
+	check(alice.getOutBuf().empty(), "alice herself gets nothing from this");
+	check(mgr.findChannel("#a")->isMember(&alice), "she's still in her channels");
+}
+
+// ============================ channel names ignore case ============================
+// SHOULD:     treat #Test / #TEST / #test as ONE channel, always show the creator's spelling
+// SHOULD NOT: create a 2nd channel, show what the joiner typed, leave an empty channel behind
+static void testCase()
+{
+	ChannelManager mgr;
+	ClientData alice(4, "alice", "al");
+	ClientData bob(5, "bob", "bo");
+
+	std::cout << "--- channel names ignore case ---" << std::endl;
+	mgr.join(&alice, params("#Test"));
+	alice.clearOutBuf();
+	mgr.join(&bob, params("#TEST"));
+	check(mgr.findChannel("#test") != NULL && mgr.findChannel("#test")->isMember(&bob), "#TEST joins the same channel as #Test");
+	check(alice.getOutBuf() == ":bob!bo@localhost JOIN #Test\r\n", "JOIN shows #Test, not what bob typed");
+	check(has(bob.getOutBuf(), " 353 bob = #Test :@alice bob"), "bob's names list: one channel, both inside");
+	alice.clearOutBuf();
+	bob.clearOutBuf();
+
+	mgr.privmsg(&bob, "#tEsT", "hi", false);
+	check(alice.getOutBuf() == ":bob!bo@localhost PRIVMSG #Test :hi\r\n", "PRIVMSG #tEsT reaches #Test");
+	alice.clearOutBuf();
+
+	mgr.part(&bob, params("#test"));
+	check(alice.getOutBuf() == ":bob!bo@localhost PART #Test\r\n", "PART #test works, shows #Test");
+	mgr.part(&alice, params("#TEST"));
+	check(mgr.findChannel("#Test") == NULL, "last one left -> deleted (key was lowercase)");
+
+	mgr.join(&alice, params("#Q"));
+	mgr.removeClient(&alice, "bye");
+	check(mgr.findChannel("#q") == NULL, "QUIT deletes the empty #Q too");
+}
+
+// ============================ WHO ============================
+// SHOULD:     one 352 per member (@ for ops) + 315 for WHO #chan, one 352 + 315 for WHO nick,
+//             always end with 315 (client waits for it)
+// SHOULD NOT: answer for unknown channels / nicks / empty slots (just 315)
+static void testWho()
+{
+	ChannelManager mgr;
+	ClientData people[3] = {ClientData(4, "alice", "al"), ClientData(5, "bob", "bo"), ClientData(-1, "ghost", "gh")};
+	ClientData &alice = people[0];
+	ClientData &bob = people[1];
+
+	std::cout << "--- WHO ---" << std::endl;
+	mgr.setClients(people, 3);
+	mgr.join(&alice, params("#test")); // alice = op
+	mgr.join(&bob, params("#test"));
+	bob.clearOutBuf();
+
+	mgr.who(&bob, params("#TEST"));
+	check(bob.getOutBuf() == ":ircserv 352 bob #test al localhost ircserv alice H@ :0 alice real\r\n"
+		":ircserv 352 bob #test bo localhost ircserv bob H :0 bob real\r\n"
+		":ircserv 315 bob #TEST :End of WHO list\r\n", "WHO #chan: 352 per member (@ = op) + 315");
+	bob.clearOutBuf();
+
+	mgr.who(&bob, params("Alice"));
+	check(bob.getOutBuf() == ":ircserv 352 bob * al localhost ircserv alice H :0 alice real\r\n"
+		":ircserv 315 bob Alice :End of WHO list\r\n", "WHO nick: one 352 + 315");
+	bob.clearOutBuf();
+
+	mgr.who(&bob, params("#nope"));
+	check(bob.getOutBuf() == ":ircserv 315 bob #nope :End of WHO list\r\n", "unknown channel -> only 315");
+	bob.clearOutBuf();
+	mgr.who(&bob, params("ghost"));
+	check(bob.getOutBuf() == ":ircserv 315 bob ghost :End of WHO list\r\n", "empty slot -> only 315");
+	bob.clearOutBuf();
+	mgr.who(&bob, noParams());
+	check(bob.getOutBuf() == ":ircserv 315 bob * :End of WHO list\r\n", "WHO alone -> only 315");
+}
+
 // ============================ main ============================
 
 int main()
@@ -571,6 +672,9 @@ int main()
 	testKick();
 	testInvite();
 	testMode();
+	testShared();
+	testCase();
+	testWho();
 
 	if (g_fail == 0)
 		std::cout << "ALL OK" << std::endl;

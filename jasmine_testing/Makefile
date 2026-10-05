@@ -8,7 +8,7 @@ SRCS	= mock_main.cpp ../src/Channel.cpp ../src/ChannelManager.cpp \
 		  ../src/ChannelJOIN.cpp ../src/ChannelPART.cpp \
 		  ../src/ChannelPRIVMSG.cpp ../src/ChannelQUIT.cpp \
 		  ../src/ChannelTOPIC.cpp ../src/ChannelKICK.cpp \
-		  ../src/ChannelINVITE.cpp ../src/ChannelMODE.cpp ../src/ChannelMODEflags.cpp
+		  ../src/ChannelINVITE.cpp ../src/ChannelMODE.cpp ../src/ChannelMODEflags.cpp ../src/ChannelWHO.cpp
 
 all: $(NAME)
 

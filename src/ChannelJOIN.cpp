@@ -69,7 +69,8 @@ void ChannelManager::joinOne(ClientData *c, const std::string &name, const std::
 	if (ch == NULL)
 	{
 		// nobody here yet -> create it, first one in becomes op
-		_channels.insert(std::make_pair(name, Channel(name)));
+		// key lowercase (for finding), Channel keeps the creator's spelling (for showing)
+		_channels.insert(std::make_pair(my_tolower(name), Channel(name)));
 		ch = findChannel(name);
 		ch->addMember(c);
 		ch->addOperator(c);
@@ -83,8 +84,9 @@ void ChannelManager::joinOne(ClientData *c, const std::string &name, const std::
 		ch->addMember(c);
 	}
 	// everyone sees the JOIN, the joiner too (that's how his client opens the window)
-	ch->broadcast(prefix(c) + " JOIN " + name + "\r\n", NULL);
+	// ch->getName(), not what he typed: "JOIN #TEST" into #test must show #test
+	ch->broadcast(prefix(c) + " JOIN " + ch->getName() + "\r\n", NULL);
 	if (!ch->getTopic().empty())
-		c->sendMsg(RPL_TOPIC(nick, name, ch->getTopic()));
+		c->sendMsg(RPL_TOPIC(nick, ch->getName(), ch->getTopic()));
 	sendNames(c, ch);
 }

@@ -40,6 +40,16 @@ bool Ircserv::checkNickFree(const Message &m)
 	return true;
 }
 
+// registered user changes nick -> he + everyone in his channels see ":old!user@host NICK :new"
+void	Ircserv::announceNick(size_t i, const std::string &newNick)
+{
+	std::string oldFullMask = _data[i].getFullMask(); // BEFORE setNick, others know him by the old name
+	_data[i].setNick(newNick);
+	std::string msg = ":" + oldFullMask + " NICK :" + newNick + "\r\n";
+	_data[i].sendMsg(msg);
+	_channels.sendToShared(&_data[i], msg); // once each, even if they share 3 channels
+}
+
 void	Ircserv::handleNick(const Message &m, size_t i)
 {
 	if (!(_data[i].getUsername().empty()) && !(_data[i].hasPassed())) {
@@ -49,7 +59,10 @@ void	Ircserv::handleNick(const Message &m, size_t i)
 		_data[i].sendMsg(ERR_NONICKNAMEGIVEN(_data[i].getNick()));
 	}
 	else if (my_tolower(_data[i].getNick()) == my_tolower(m.getParam(0))) {
-		_data[i].setNick(m.getParam(0));
+		if (_data[i].isRegistered() && _data[i].getNick() != m.getParam(0))
+			announceNick(i, m.getParam(0)); // alice -> Alice, still has to be announced
+		else
+			_data[i].setNick(m.getParam(0));
 	}
 	else if (!checkNickValidity(m)) {
 		_data[i].sendMsg(ERR_ERRONEUSNICKNAME(_data[i].getNick(), m.getParam(0)));
@@ -68,9 +81,6 @@ void	Ircserv::handleNick(const Message &m, size_t i)
 		}
 	}
 	else {
-		std::string oldFullMask = _data[i].getFullMask();
-		_data[i].setNick(m.getParam(0));
-		_data[i].sendMsg(":" + oldFullMask + " NICK :" + _data[i].getNick() + "\r\n");
-		// send ":oldnick!user@host NICK :newnick" to everyone who shares at least one channel with this client
+		announceNick(i, m.getParam(0));
 	}
 }

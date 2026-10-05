@@ -60,9 +60,9 @@ static Message parseMessage(const std::string& completeMessage)
 
 void Ircserv::handleMessage(const Message& m, size_t i)
 {
-	std::string cmds[15] = {"PASS", "NICK", "USER", "CAP", "PING", "PONG", "QUIT", "NOTICE", "PRIVMSG", "JOIN", "PART", "KICK", "INVITE", "TOPIC", "MODE"};
+	std::string cmds[16] = {"PASS", "NICK", "USER", "CAP", "PING", "PONG", "QUIT", "NOTICE", "PRIVMSG", "JOIN", "PART", "KICK", "INVITE", "TOPIC", "MODE", "WHO"};
 	int j;
-	for (j = 0; j < 15; j++) {
+	for (j = 0; j < 16; j++) {
 		if (m.getCommand() == cmds[j]) {
 			break;
 		}
@@ -129,6 +129,12 @@ void Ircserv::handleMessage(const Message& m, size_t i)
 				_data[i].sendMsg(ERR_NOTREGISTERED(_data[i].getNick()));
 			else
 				_channels.mode(&_data[i], m.getParams());
+			break;
+		case CMD_WHO:
+			if (!_data[i].isRegistered())
+				_data[i].sendMsg(ERR_NOTREGISTERED(_data[i].getNick()));
+			else
+				_channels.who(&_data[i], m.getParams());
 			break;
 		default:
 			_data[i].sendMsg(ERR_UNKNOWNCOMMAND(_data[i].getNick(), m.getCommand()));

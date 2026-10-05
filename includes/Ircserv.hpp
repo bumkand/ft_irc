@@ -38,6 +38,7 @@ class	Ircserv
 		void	handlePass(const Message &m, size_t i);
 		bool	checkNickFree(const Message &m);
 		void	handleNick(const Message &m, size_t i);
+		void	announceNick(size_t i, const std::string &newNick);
 		void	handleUser(const Message &m, size_t i);
 		void	handleCap(const Message &m, size_t i);
 		void	handlePing(const Message &m, size_t i);

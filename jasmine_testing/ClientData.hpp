@@ -23,6 +23,8 @@ public:
 	int getFD() const { return _fd; }
 	const std::string &getNick() const { return _nick; }
 	const std::string &getUsername() const { return _user; }
+	std::string getHost() const { return "localhost"; }
+	std::string getRealname() const { return _nick + " real"; }
 	bool isRegistered() const { return _registered; }
 	std::string getFullMask() const { return _nick + "!" + _user + "@localhost"; } // real one uses the IP
 

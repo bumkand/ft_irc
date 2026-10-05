@@ -17,6 +17,7 @@ enum cmdType {
 	CMD_INVITE,
 	CMD_TOPIC,
 	CMD_MODE,
+	CMD_WHO,
     CMD_UNKNOWN
 };
 

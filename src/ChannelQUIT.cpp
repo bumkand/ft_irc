@@ -3,7 +3,7 @@
 #include "ClientData.hpp"
 #include "Replies.hpp"
 
-// QUIT / disconnect:
+// QUIT / disconnect (+ sendToShared, also used for NICK changes):
 // kata calls this on QUIT, jakub when recv() returns 0 / error.
 // must happen BEFORE resetClient(): the slot gets reused by the next person
 // who connects, and he would inherit this guy's channels + op rights
@@ -43,25 +43,37 @@ static void tellChannel(Channel *ch, ClientData *c,
 	}
 }
 
+// send msg ONCE to everyone who shares at least 1 channel with c (not to c himself)
+// used by QUIT (below) and NICK (kata's handleNick)
+void ChannelManager::sendToShared(ClientData *c, const std::string &msg)
+{
+	std::vector<ClientData *> told; // who already got it
+	std::map<std::string, Channel>::iterator it = _channels.begin();
+
+	while (it != _channels.end())
+	{
+		if (it->second.isMember(c))
+			tellChannel(&it->second, c, msg, told);
+		it++;
+	}
+}
+
 void ChannelManager::removeClient(ClientData *c, const std::string &reason)
 {
-	std::string msg = prefix(c) + " QUIT :" + reason + "\r\n";
-	std::vector<ClientData *> told; // who already got the QUIT line
 	std::vector<std::string> emptyChannels; // erase them after the loop
 	std::map<std::string, Channel>::iterator it;
 	Channel *ch;
 	size_t i;
 
+	sendToShared(c, prefix(c) + " QUIT :" + reason + "\r\n"); // tell first, then remove
 	it = _channels.begin();
 	while (it != _channels.end())
 	{
 		ch = &it->second;
-		if (ch->isMember(c))
-			tellChannel(ch, c, msg, told);
 		// every channel, not only his: he can also be on an invite list
 		ch->removeMember(c);
 		if (ch->isEmpty())
-			emptyChannels.push_back(ch->getName());
+			emptyChannels.push_back(it->first); // the map key (lowercase), that's what erase needs
 		it++;
 	}
 	// erasing inside the loop above would break it, so do it here

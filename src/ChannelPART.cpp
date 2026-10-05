@@ -41,7 +41,7 @@ void ChannelManager::partOne(ClientData *c, const std::string &name, const std::
 		c->sendMsg(ERR_NOTONCHANNEL(c->getNick(), name));
 		return;
 	}
-	std::string msg = prefix(c) + " PART " + name;
+	std::string msg = prefix(c) + " PART " + ch->getName(); // real spelling, not what he typed
 	if (!reason.empty())
 		msg += " :" + reason;
 	// send BEFORE removing him, so he gets it too (his client closes the window)

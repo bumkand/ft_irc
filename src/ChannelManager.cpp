@@ -14,7 +14,8 @@ ChannelManager::~ChannelManager()
 
 Channel *ChannelManager::findChannel(const std::string &name)
 {
-	std::map<std::string, Channel>::iterator it = _channels.find(name);
+	// keys are lowercase, so #Test / #TEST / #test all find the same channel
+	std::map<std::string, Channel>::iterator it = _channels.find(my_tolower(name));
 
 	if (it == _channels.end())
 		return (NULL);
@@ -115,5 +116,5 @@ void ChannelManager::deleteIfEmpty(Channel *ch)
 	if (!ch->isEmpty())
 		return;
 	std::string name = ch->getName(); // copy first, erase destroys ch (and its name)
-	_channels.erase(name);
+	_channels.erase(my_tolower(name)); // key is lowercase
 }
