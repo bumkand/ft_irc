@@ -1,9 +1,9 @@
 
 #include "Channel.hpp"
-#include "Client.hpp" // real one or the mock, depends on -I order
+#include "ClientData.hpp" // real one or the mock, depends on -I order
 
-Channel::Channel(const std::string &name)
-	: _name(name),
+Channel::Channel(const std::string &name):
+	_name(name),
 	_topic(""),
 	_key(""),
 	_inviteOnly(false),
@@ -14,11 +14,11 @@ Channel::Channel(const std::string &name)
 
 Channel::~Channel()
 {
-	// we don't own the Client pointers, the server does -> nothing to delete
+	// we don't own the ClientData pointers, the server does > nothing to delete
 }
 
 // small helper: is c in this vector?
-static bool contains(const std::vector<Client *> &v, Client *c)
+static bool contains(const std::vector<ClientData *> &v, ClientData *c)
 {
 	size_t i = 0;
 
@@ -32,7 +32,7 @@ static bool contains(const std::vector<Client *> &v, Client *c)
 }
 
 // small helper: remove c from vector if he's there
-static void removeFrom(std::vector<Client *> &v, Client *c)
+static void removeFrom(std::vector<ClientData *> &v, ClientData *c)
 {
 	size_t i = 0;
 
@@ -47,43 +47,43 @@ static void removeFrom(std::vector<Client *> &v, Client *c)
 	}
 }
 
-bool Channel::isMember(Client *c) const { return (contains(_members, c)); }
-bool Channel::isOperator(Client *c) const { return (contains(_operators, c)); }
-bool Channel::isInvited(Client *c) const { return (contains(_invited, c)); }
+bool Channel::isMember(ClientData *c) const { return (contains(_members, c)); }
+bool Channel::isOperator(ClientData *c) const { return (contains(_operators, c)); }
+bool Channel::isInvited(ClientData *c) const { return (contains(_invited, c)); }
 bool Channel::isEmpty() const { return (_members.empty()); }
 size_t Channel::memberCount() const { return (_members.size()); }
 
-void Channel::addMember(Client *c)
+void Channel::addMember(ClientData *c)
 {
 	if (!isMember(c)) // no duplicates
 		_members.push_back(c);
 }
 
-void Channel::removeMember(Client *c)
+void Channel::removeMember(ClientData *c)
 {
 	removeFrom(_members, c);
 	removeFrom(_operators, c); // not in channel -> can't be op either
 	removeFrom(_invited, c); // invite is used up
 }
 
-void Channel::addOperator(Client *c)
+void Channel::addOperator(ClientData *c)
 {
 	if (!isOperator(c))
 		_operators.push_back(c);
 }
 
-void Channel::removeOperator(Client *c)
+void Channel::removeOperator(ClientData *c)
 { 
 	removeFrom(_operators, c);
 }
 
-void Channel::addInvite(Client *c)
+void Channel::addInvite(ClientData *c)
 {
 	if (!isInvited(c))
 		_invited.push_back(c);
 }
 
-void Channel::broadcast(const std::string &msg, Client *skip)
+void Channel::broadcast(const std::string &msg, ClientData *skip)
 {
 	size_t i = 0;
 
@@ -128,11 +128,13 @@ std::string Channel::modeString() const
 }
 
 const std::string &Channel::getName() const { return (_name); }
-const std::vector<Client *> &Channel::getMembers() const { return (_members); }
+const std::vector<ClientData *> &Channel::getMembers() const { return (_members); }
 const std::string &Channel::getTopic() const { return (_topic); }
 const std::string &Channel::getKey() const { return (_key); }
+
 bool Channel::isInviteOnly() const { return (_inviteOnly); }
 bool Channel::isTopicOpOnly() const { return (_topicOpOnly); }
+
 int Channel::getUserLimit() const { return (_userLimit); }
 
 void Channel::setTopic(const std::string &t) { _topic = t; }

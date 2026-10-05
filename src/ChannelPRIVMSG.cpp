@@ -1,36 +1,33 @@
 
 #include "ChannelManager.hpp"
-#include "Client.hpp"
+#include "ClientData.hpp"
 #include "Replies.hpp"
 
-// PRIVMSG Command (channel part only):
+// PRIVMSG / NOTICE Command (channel part only):
 // PRIVMSG #chan :text
-// kata handles PRIVMSG to a nick, she calls this only when target starts with #
+// kata already checked 411/412 and split "#a,#b", she calls this once per #target
+// notice = true -> NOTICE: same thing but never send errors back (RFC rule)
 
-void ChannelManager::privmsg(Client *c, const std::vector<std::string> &params)
+void ChannelManager::privmsg(ClientData *c, const std::string &target,
+								const std::string &text, bool notice)
 {
-	if (params.empty())
-	{
-		c->sendMsg(ERR_NORECIPIENT(c->getNick(), "PRIVMSG"));
-		return;
-	}
-	if (params.size() < 2 || params[1].empty())
-	{
-		c->sendMsg(ERR_NOTEXTTOSEND(c->getNick()));
-		return;
-	}
-	std::string name = params[0];
-	Channel *ch = findChannel(name);
+	std::string cmd = "PRIVMSG";
+	if (notice)
+		cmd = "NOTICE";
+
+	Channel *ch = findChannel(target);
 	if (ch == NULL)
 	{
-		c->sendMsg(ERR_NOSUCHCHANNEL(c->getNick(), name));
+		if (!notice)
+			c->sendMsg(ERR_NOSUCHCHANNEL(c->getNick(), target));
 		return;
 	}
 	if (!ch->isMember(c))
 	{
-		c->sendMsg(ERR_CANNOTSENDTOCHAN(c->getNick(), name));
+		if (!notice)
+			c->sendMsg(ERR_CANNOTSENDTOCHAN(c->getNick(), target));
 		return;
 	}
 	// everyone except the sender, his client already shows what he typed
-	ch->broadcast(prefix(c) + " PRIVMSG " + name + " :" + params[1] + "\r\n", c);
+	ch->broadcast(prefix(c) + " " + cmd + " " + target + " :" + text + "\r\n", c);
 }

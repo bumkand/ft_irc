@@ -58,6 +58,11 @@ void Message::setPrefix(const std::string &prefix)
 	_prefix = prefix;
 }
 
+const std::vector<std::string>& Message::getParams() const
+{
+	return _params;
+}
+
 void Message::setCommand(const std::string &command)
 {
 	_command = command;

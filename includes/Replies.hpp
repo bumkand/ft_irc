@@ -37,6 +37,7 @@ inline std::string numeric(const std::string &code,
 #define RPL_NOTOPIC(nick, chan) numeric("331", nick, chan + " :No topic is set")
 #define RPL_TOPIC(nick, chan, topic) numeric("332", nick, chan + " :" + topic)
 #define RPL_INVITING(nick, target, chan) numeric("341", nick, target + " " + chan)
+#define RPL_ENDOFBANLIST(nick, chan) numeric("368", nick, chan + " :End of channel ban list")
 #define RPL_NAMREPLY(nick, chan, names) numeric("353", nick, "= " + chan + " :" + names)
 #define RPL_ENDOFNAMES(nick, chan) numeric("366", nick, chan + " :End of /NAMES list")
 

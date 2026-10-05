@@ -95,16 +95,40 @@ void Ircserv::handleMessage(const Message& m, size_t i)
 			handlePrivMsg(m, i, false);
 			break;
 		case CMD_JOIN:
+			if (!_data[i].isRegistered())
+				_data[i].sendMsg(ERR_NOTREGISTERED(_data[i].getNick()));
+			else
+				_channels.join(&_data[i], m.getParams());
 			break;
 		case CMD_PART:
+			if (!_data[i].isRegistered())
+				_data[i].sendMsg(ERR_NOTREGISTERED(_data[i].getNick()));
+			else
+				_channels.part(&_data[i], m.getParams());
 			break;
 		case CMD_KICK:
+			if (!_data[i].isRegistered())
+				_data[i].sendMsg(ERR_NOTREGISTERED(_data[i].getNick()));
+			else
+				_channels.kick(&_data[i], m.getParams());
 			break;
 		case CMD_INVITE:
+			if (!_data[i].isRegistered())
+				_data[i].sendMsg(ERR_NOTREGISTERED(_data[i].getNick()));
+			else
+				_channels.invite(&_data[i], m.getParams());
 			break;
 		case CMD_TOPIC:
+			if (!_data[i].isRegistered())
+				_data[i].sendMsg(ERR_NOTREGISTERED(_data[i].getNick()));
+			else
+				_channels.topic(&_data[i], m.getParams());
 			break;
 		case CMD_MODE:
+			if (!_data[i].isRegistered())
+				_data[i].sendMsg(ERR_NOTREGISTERED(_data[i].getNick()));
+			else
+				_channels.mode(&_data[i], m.getParams());
 			break;
 		default:
 			_data[i].sendMsg(ERR_UNKNOWNCOMMAND(_data[i].getNick(), m.getCommand()));

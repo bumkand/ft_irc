@@ -2,6 +2,7 @@
 
 Ircserv::Ircserv()
 {
+	_channels.setClients(_data, MAX_CLIENTS); // so channels can find any nick (INVITE)
 	//std::cout << "Default constructor called" << std::endl;
 }
 
@@ -153,7 +154,7 @@ void	Ircserv::addNewClient()
 					_pfds[i].events = POLLIN;
 					_pfds[i].revents = 0;
 					_data[i].setFD(_pfds[i].fd);
-					//fill the _data[i]._host with the IP address or the client here please
+					_data[i].setHost(inet_ntoa(clientAddress.sin_addr)); // "127.0.0.1", used in nick!user@host
 					added = 1;
 					std::cout << "New client on the slot " << _clientSocket << std::endl;
 					_activeClients++;
@@ -183,6 +184,7 @@ void	Ircserv::existClient()
 			if (recBite == -1)
 			{
 				std::cout << "Error reading from socket " << _pfds[i].fd << std::endl;
+				_channels.removeClient(&_data[i], "Connection closed");
 				close(_pfds[i].fd);
 				_pfds[i].fd = -1;
 				_data[i].resetClient();
@@ -191,6 +193,7 @@ void	Ircserv::existClient()
 			else if (recBite == 0)
 			{
 				std::cout << "Client disconect on fd " << _pfds[i].fd << std::endl;
+				_channels.removeClient(&_data[i], "Connection closed");
 				close(_pfds[i].fd);
 				_pfds[i].fd = -1;
 				_data[i].resetClient();

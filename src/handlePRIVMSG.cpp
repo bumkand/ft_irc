@@ -48,7 +48,7 @@ void Ircserv::handlePrivMsg(const Message &m, size_t i, bool notice)
 		{
 			if (receivers[j][0] == '#' || receivers[j][0] == '&')
 			{
-				// call jasmine's code
+				_channels.privmsg(&_data[i], receivers[j], text, notice);
 			}
 			else
 			{

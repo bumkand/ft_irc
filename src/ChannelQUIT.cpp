@@ -1,13 +1,15 @@
+
 #include "ChannelManager.hpp"
-#include "Client.hpp"
+#include "ClientData.hpp"
 #include "Replies.hpp"
 
 // QUIT / disconnect:
 // kata calls this on QUIT, jakub when recv() returns 0 / error.
-// must happen BEFORE the Client is deleted, or channels keep a dead pointer
+// must happen BEFORE resetClient(): the slot gets reused by the next person
+// who connects, and he would inherit this guy's channels + op rights
 
 // is c already in the list?
-static bool alreadyIn(const std::vector<Client *> &list, Client *c)
+static bool alreadyIn(const std::vector<ClientData *> &list, ClientData *c)
 {
 	size_t i = 0;
 
@@ -22,11 +24,11 @@ static bool alreadyIn(const std::vector<Client *> &list, Client *c)
 
 // send the QUIT line to everyone in ch who didn't get it yet
 // (bob + alice in 3 same channels > alice gets 1 QUIT, not 3)
-static void tellChannel(Channel *ch, Client *c,
+static void tellChannel(Channel *ch, ClientData *c,
 						const std::string &msg,
-						std::vector<Client *> &told)
+						std::vector<ClientData *> &told)
 {
-	const std::vector<Client *> &members = ch->getMembers();
+	const std::vector<ClientData *> &members = ch->getMembers();
 	size_t i;
 
 	i = 0;
@@ -41,10 +43,10 @@ static void tellChannel(Channel *ch, Client *c,
 	}
 }
 
-void ChannelManager::removeClient(Client *c, const std::string &reason)
+void ChannelManager::removeClient(ClientData *c, const std::string &reason)
 {
 	std::string msg = prefix(c) + " QUIT :" + reason + "\r\n";
-	std::vector<Client *> told; // who already got the QUIT line
+	std::vector<ClientData *> told; // who already got the QUIT line
 	std::vector<std::string> emptyChannels; // erase them after the loop
 	std::map<std::string, Channel>::iterator it;
 	Channel *ch;

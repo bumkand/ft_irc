@@ -82,7 +82,7 @@ void	Ircserv::handleQuit(const Message &m, size_t i)
 	{
 		quitMgs = m.getParam(0);
 	}
-	// removeClient(_data[i], quitMsg); //jasmine's code
+	_channels.removeClient(&_data[i], quitMgs); // tell his channels + take him out
 	_data[i].resetClient();
 	close(_pfds[i].fd);
 	_pfds[i].fd = -1;

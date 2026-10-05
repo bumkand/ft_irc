@@ -17,6 +17,7 @@ class Message
 		const std::string& getCommand() const;
 		const std::string& getParam(size_t i) const;
 		size_t		getParamSize() const;
+		const std::vector<std::string>& getParams() const; // whole list, for channel cmds
 
 		void setPrefix(const std::string &prefix);
 		void setCommand(const std::string &command);

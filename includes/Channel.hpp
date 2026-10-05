@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-class Client; // only pointers here, so no need to include the whole class
+class ClientData; // only pointers here, so no need to include the whole class
 
 // one object per channel. only data + small rules, no command logic here
 class Channel
@@ -17,28 +17,28 @@ private:
 	bool _inviteOnly;  // +i
 	bool _topicOpOnly; // +t
 	int _userLimit;	   // 0 = no limit (+l off)
-	std::vector<Client *> _members;
-	std::vector<Client *> _operators;
-	std::vector<Client *> _invited; // people allowed in even with +i
+	std::vector<ClientData *> _members;
+	std::vector<ClientData *> _operators;
+	std::vector<ClientData *> _invited; // people allowed in even with +i
 
 public:
 	Channel(const std::string &name);
 	~Channel();
 
 	// membership
-	bool isMember(Client *c) const;
-	bool isOperator(Client *c) const;
-	bool isInvited(Client *c) const;
+	bool isMember(ClientData *c) const;
+	bool isOperator(ClientData *c) const;
+	bool isInvited(ClientData *c) const;
 	bool isEmpty() const;
 	size_t memberCount() const;
-	void addMember(Client *c);
-	void removeMember(Client *c); // also drops op + invite
-	void addOperator(Client *c);
-	void removeOperator(Client *c);
-	void addInvite(Client *c);
+	void addMember(ClientData *c);
+	void removeMember(ClientData *c); // also drops op + invite
+	void addOperator(ClientData *c);
+	void removeOperator(ClientData *c);
+	void addInvite(ClientData *c);
 
 	// send msg to everyone in the channel except 'skip' (NULL = nobody skipped)
-	void broadcast(const std::string &msg, Client *skip);
+	void broadcast(const std::string &msg, ClientData *skip);
 
 	// "@alice bob carol" list for the 353 reply
 	std::string namesList() const;
@@ -47,7 +47,7 @@ public:
 
 	// getters / setters
 	const std::string &getName() const;
-	const std::vector<Client *> &getMembers() const; // read only, to loop over them
+	const std::vector<ClientData *> &getMembers() const; // read only, to loop over them
 	const std::string &getTopic() const;
 	const std::string &getKey() const;
 	bool isInviteOnly() const;

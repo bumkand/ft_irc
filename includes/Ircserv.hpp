@@ -10,9 +10,11 @@
 #include <unistd.h>
 #include <poll.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <sys/socket.h>
 #include "ClientData.hpp"
 #include "Message.hpp"
+#include "ChannelManager.hpp"
 
 #define MAX_CLIENTS 100
 
@@ -28,6 +30,7 @@ class	Ircserv
 		pollfd		_pfds[MAX_CLIENTS];
 		size_t			_activeClients;
 		ClientData	_data[MAX_CLIENTS];
+		ChannelManager	_channels; // all channels, jasmine's part
 		
 		void	handleMessage(const Message &m, size_t i);
 

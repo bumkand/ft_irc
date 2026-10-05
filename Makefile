@@ -9,6 +9,10 @@ INCLUDES_DIR = includes
 SRCS = main.cpp Ircserv.cpp ClientData.cpp \
 		parse.cpp Message.cpp handleCmds.cpp \
 		handleNICK.cpp handlePRIVMSG.cpp utils.cpp \
+		Channel.cpp ChannelManager.cpp ChannelJOIN.cpp \
+		ChannelPART.cpp ChannelPRIVMSG.cpp ChannelQUIT.cpp \
+		ChannelTOPIC.cpp ChannelKICK.cpp ChannelINVITE.cpp \
+		ChannelMODE.cpp ChannelMODEflags.cpp \
 		
 
 OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)

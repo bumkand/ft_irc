@@ -1,13 +1,13 @@
 
 #include "ChannelManager.hpp"
-#include "Client.hpp"
+#include "ClientData.hpp"
 #include "Replies.hpp"
 
 // PART Command:
 // PART #chan[,#chan2] [:reason]
 // part() splits the list, partOne() does one channel
 
-void ChannelManager::part(Client *c, const std::vector<std::string> &params)
+void ChannelManager::part(ClientData *c, const std::vector<std::string> &params)
 {
 	if (params.empty() || params[0].empty())
 	{
@@ -27,7 +27,7 @@ void ChannelManager::part(Client *c, const std::vector<std::string> &params)
 	}
 }
 
-void ChannelManager::partOne(Client *c, const std::string &name, const std::string &reason)
+void ChannelManager::partOne(ClientData *c, const std::string &name, const std::string &reason)
 {
 	Channel *ch = findChannel(name);
 

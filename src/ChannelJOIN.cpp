@@ -1,13 +1,13 @@
 
 #include "ChannelManager.hpp"
-#include "Client.hpp"
+#include "ClientData.hpp"
 #include "Replies.hpp"
 
 // JOIN Command:
 // JOIN #chan[,#chan2] [key[,key2]]
 // join() splits the lists, joinOne() does one channel, canJoin() checks +i +k +l
 
-void ChannelManager::join(Client *c, const std::vector<std::string> &params)
+void ChannelManager::join(ClientData *c, const std::vector<std::string> &params)
 {
 	if (params.empty() || params[0].empty())
 	{
@@ -31,7 +31,7 @@ void ChannelManager::join(Client *c, const std::vector<std::string> &params)
 }
 
 // checks +i +k +l. if he can't get in, sends the error and returns false
-bool ChannelManager::canJoin(Client *c, Channel *ch, const std::string &key)
+bool ChannelManager::canJoin(ClientData *c, Channel *ch, const std::string &key)
 {
 	std::string nick = c->getNick();
 	std::string name = ch->getName();
@@ -55,7 +55,7 @@ bool ChannelManager::canJoin(Client *c, Channel *ch, const std::string &key)
 }
 
 // one channel at a time
-void ChannelManager::joinOne(Client *c, const std::string &name, const std::string &key)
+void ChannelManager::joinOne(ClientData *c, const std::string &name, const std::string &key)
 {
 	std::string nick = c->getNick();
 
