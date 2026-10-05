@@ -154,7 +154,17 @@ void	Ircserv::addNewClient()
 					_pfds[i].events = POLLIN;
 					_pfds[i].revents = 0;
 					_data[i].setFD(_pfds[i].fd);
-					_data[i].setHost(inet_ntoa(clientAddress.sin_addr)); // "127.0.0.1", used in nick!user@host
+
+					// Fill the _data[i]._host with the client IP address
+					char buff[INET_ADDRSTRLEN];
+					bzero(buff, INET_ADDRSTRLEN);
+					inet_ntop(AF_INET, &(clientAddress.sin_addr), buff, sizeof(buff));
+					std::stringstream s(buff);
+					std::string str;
+					s >> str;
+					_data[i].setHost(str);
+					std::cout << "IP ADDRESSSSSSS ====>>>> " << _data[i].getHost() << std::endl;
+					
 					added = 1;
 					std::cout << "New client on the slot " << _clientSocket << std::endl;
 					_activeClients++;
