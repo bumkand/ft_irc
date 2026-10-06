@@ -1,6 +1,6 @@
 
 #include "Channel.hpp"
-#include "ClientData.hpp" // real one or the mock, depends on -I order
+#include "ClientData.hpp" // need the full class here, the .hpp only has "class ClientData;"
 
 Channel::Channel(const std::string &name):
 	_name(name),

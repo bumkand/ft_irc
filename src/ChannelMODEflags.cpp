@@ -40,11 +40,21 @@ static void modeFlag(Channel *ch, char sign, char m, ModeChanges &out)
 	addChange(out, sign, m, "");
 }
 
+// key can't be empty + no ',' (JOIN splits keys on ',' -> "a,b" could never match)
+static bool isValidKey(const std::string &key)
+{
+	if (key.empty())
+		return (false);
+	return (key.find(',') == std::string::npos);
+}
+
 // +k key / -k
 static void modeKey(Channel *ch, char sign, const std::string &arg, ModeChanges &out)
 {
 	if (sign == '+')
 	{
+		if (!isValidKey(arg))
+			return; // "" or "a,b" -> ignore, nothing gets announced
 		ch->setKey(arg);
 		addChange(out, '+', 'k', arg);
 	}
@@ -55,14 +65,32 @@ static void modeKey(Channel *ch, char sign, const std::string &arg, ModeChanges 
 	}
 }
 
+// only digits + max 4 of them, so atoi can't overflow ("99999999999", "5abc" -> no)
+static bool isSmallNumber(const std::string &str)
+{
+	size_t i = 0;
+
+	if (str.empty() || str.size() > 4)
+		return (false);
+	while (i < str.size())
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
 // +l number / -l
 static void modeLimit(Channel *ch, char sign, const std::string &arg, ModeChanges &out)
 {
 	if (sign == '+')
 	{
+		if (!isSmallNumber(arg))
+			return; // "abc", "5abc", "-3", way too big -> ignore
 		int n = std::atoi(arg.c_str());
 		if (n <= 0)
-			return; // "abc" or "0" -> makes no sense, ignore
+			return; // "0" -> makes no sense, ignore
 		std::stringstream ss;
 		ss << n; // back to text, so "05" is sent as "5"
 		ch->setUserLimit(n);
