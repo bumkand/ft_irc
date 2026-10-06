@@ -41,7 +41,7 @@ void Ircserv::handlePrivMsg(const Message &m, size_t i, bool notice)
 		std::string text = m.getParam(1);
 		for (size_t j = 2; j < m.getParamSize(); j++)
 		{
-			if (!m.getParam().empty()) {
+			if (!m.getParam(j).empty()) {
 				text += " " + m.getParam(j);
 			}
 		}
