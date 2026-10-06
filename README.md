@@ -66,11 +66,7 @@ PRIVMSG #test :hello everyone
 - [irssi documentation](https://irssi.org/documentation/) - Our reference client, used for testing
 
 ### AI Usage
-- Channels and operator commands (jlager): Claude was used to explain IRC behaviour and numeric replies from the RFCs, to help design and write the channel data structures and the channel commands (JOIN, PART, KICK, INVITE, TOPIC, MODE, WHO), to review the code for bugs and edge cases, to generate edge-case tests, and to fix input validation for `MODE +k` / `+l`.
-- Server and connections (jaandras): [how AI was used]
-- Parsing, registration and private messages (ksevciko): [how AI was used]
-
-**Note:** Every part generated or suggested by AI was reviewed, tested and understood by the person responsible for it, who can explain every line.
+- Claude was used to explain IRC behaviour and numeric replies from the RFCs and to review the code for bugs and edge cases
 
 ## Team and responsibilities
 - **jaandras** - server socket, `poll()` loop, accepting / disconnecting clients, input and output buffers
