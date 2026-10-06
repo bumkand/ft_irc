@@ -1,5 +1,5 @@
 # ft_irc 💬
-*This project has been created as part of the 42 curriculum by jaandrasi, jlager and ksevciko.*
+*This project has been created as part of the 42 curriculum by jaandras, jlager and ksevciko.*
 
 ## Description
 ft_irc is our own IRC (Internet Relay Chat) server, written in C++98. You connect to it with a real IRC client (our reference client is **irssi**) and use it like any official IRC server: register with a password and a nickname, send private messages, and talk in group channels.
@@ -67,14 +67,14 @@ PRIVMSG #test :hello everyone
 
 ### AI Usage
 - Channels and operator commands (jlager): Claude was used to explain IRC behaviour and numeric replies from the RFCs, to help design and write the channel data structures and the channel commands (JOIN, PART, KICK, INVITE, TOPIC, MODE, WHO), to review the code for bugs and edge cases, to generate edge-case tests, and to fix input validation for `MODE +k` / `+l`.
-- Server and connections ([JAKUB_LOGIN]): [how AI was used]
-- Parsing, registration and private messages ([KATA_LOGIN]): [how AI was used]
+- Server and connections (jaandras): [how AI was used]
+- Parsing, registration and private messages (ksevciko): [how AI was used]
 
 **Note:** Every part generated or suggested by AI was reviewed, tested and understood by the person responsible for it, who can explain every line.
 
 ## Team and responsibilities
-- **[JAKUB_LOGIN]** - server socket, `poll()` loop, accepting / disconnecting clients, input and output buffers
-- **[KATA_LOGIN]** - message parsing, command dispatch, registration (`PASS`, `NICK`, `USER`, `CAP`), `PING`, private messages, `QUIT`
+- **jaandras** - server socket, `poll()` loop, accepting / disconnecting clients, input and output buffers
+- **ksevciko** - message parsing, command dispatch, registration (`PASS`, `NICK`, `USER`, `CAP`), `PING`, private messages, `QUIT`
 - **jlager** - channels and operator commands: `JOIN`, `PART`, channel messages, `KICK`, `INVITE`, `TOPIC`, `MODE`, `WHO`
 
 ## Supported commands
