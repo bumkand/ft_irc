@@ -7,7 +7,7 @@ void Ircserv::nickPrivMsg(const std::string &receiver, const std::string &msg)
 {
 	for (size_t j = 0; j < MAX_CLIENTS; j++)
 	{
-		if (my_tolower(receiver) == my_tolower(_data[j].getNick()))
+		if (_data[j].getFD() != -1 && my_tolower(receiver) == my_tolower(_data[j].getNick()))
 		{
 			_data[j].sendMsg(msg);
 			std::cout << "privmsg got send" << std::endl;
@@ -41,7 +41,9 @@ void Ircserv::handlePrivMsg(const Message &m, size_t i, bool notice)
 		std::string text = m.getParam(1);
 		for (size_t j = 2; j < m.getParamSize(); j++)
 		{
-			text += m.getParam(j);
+			if (!m.getParam().empty()) {
+				text += " " + m.getParam(j);
+			}
 		}
 		std::vector<std::string> receivers = split(m.getParam(0), ',');
 		for (size_t j = 0; j < receivers.size(); j++)
