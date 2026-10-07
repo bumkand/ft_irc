@@ -54,7 +54,7 @@ void	Ircserv::closeSocket()
 
 void	signalHandler(int sig)
 {
-	std::cout << "Server was termiated by " << sig << std::endl;
+	std::cerr << "Server was termiated by " << sig << std::endl;
 }
 
 // Server socket initialization
@@ -70,7 +70,7 @@ void	Ircserv::initServ(char *arv[])
 
 	if (_port < 0 || _port > 65535)
 	{
-		std::cout << "Error: choose port between 0 - 65535" << std::endl;
+		std::cerr << "Error: choose port between 0 - 65535" << std::endl;
 		throw ErrorException();
 	}
 
@@ -173,7 +173,7 @@ void	Ircserv::addNewClient()
 			}
 			if (added == 0)
 			{
-				std::cout << "Server is full, client denied" << std::endl;
+				std::cerr << "Server is full, client denied" << std::endl;
 				close(_clientSocket);
 			}
 		}
@@ -193,7 +193,7 @@ void	Ircserv::existClient()
 			ssize_t recBite = recv(_pfds[i].fd, buffer, sizeof(buffer), 0);
 			if (recBite == -1)
 			{
-				std::cout << "Error reading from socket " << _pfds[i].fd << std::endl;
+				std::cerr << "Error reading from socket " << _pfds[i].fd << std::endl;
 				_channels.removeClient(&_data[i], "Connection closed");
 				close(_pfds[i].fd);
 				_pfds[i].fd = -1;
@@ -212,8 +212,8 @@ void	Ircserv::existClient()
 			else
 			{
 				_data[i].appendStr(buffer, recBite);
-				std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
-				std::cout << "String data from client fd " << _data[i].getFD() << "--> " << _data[i].getStr() << std::endl;
+				// std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
+				// std::cout << "String data from client fd " << _data[i].getFD() << "--> " << _data[i].getStr() << std::endl;
 				parse(i);
 			}
 		}
@@ -232,9 +232,14 @@ void	Ircserv::existClient()
 		{
 			ssize_t	sendBite = send(_pfds[i].fd, _data[i].getOutBuf().c_str(), _data[i].getOutBuf().length(), 0);
 			if (sendBite < 0)
-				std::cout << "Error writing client" << std::endl;
+				std::cerr << "Error writing client" << std::endl;
 			else
+			{
+				std::cout << " --> sending messages to: " << _data[i].getNick()
+					<< ", on fd: " << _data[i].getFD() << ", message content: " 
+					<< _data[i].getOutBuf().substr(0, sendBite);
 				_data[i].eraseOutBuf(0, sendBite);
+			}
 		}
 		// Check if out buffer is empty and change poll events to POLLIN
 		if (_data[i].getOutBuf().empty())

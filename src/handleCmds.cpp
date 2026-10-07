@@ -9,7 +9,7 @@ void	Ircserv::welcomeSequence(size_t i)
 	_data[i].sendMsg(RPL_YOURHOST(_data[i].getNick()));
 	_data[i].sendMsg(RPL_CREATED(_data[i].getNick()));
 	_data[i].sendMsg(RPL_MYINFO(_data[i].getNick()));
-	std::cout << "welcome sequence sent" << std::endl;//remove
+	std::cout << "welcome sequence sent" << std::endl;
 }
 
 void	Ircserv::handlePass(const Message &m, size_t i)
@@ -25,12 +25,12 @@ void	Ircserv::handlePass(const Message &m, size_t i)
 	else if (m.getParam(0) != _password)
 	{
 		_data[i].sendMsg(ERR_PASSWDMISMATCH(_data[i].getNick()));
-		std::cout << "wrong server password" << std::endl;//remove
+		std::cout << "wrong server password" << std::endl;
 	}
 	else
 	{
 		_data[i].setPassed(true);
-		std::cout << "client has passed" << std::endl;//remove
+		std::cout << "client has passed" << std::endl;
 	}
 }
 
@@ -61,7 +61,7 @@ void	Ircserv::handleCap(const Message &m, size_t i)
 	if (m.getParamSize() > 0 && m.getParam(0) == "LS")
 	{
 		_data[i].sendMsg(":" SERVER_NAME " CAP * LS :\r\n");
-		std::cout << "capabilities established" << std::endl;//remove
+		std::cout << "capabilities established" << std::endl;
 	}
 }
 

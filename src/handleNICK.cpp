@@ -68,12 +68,12 @@ void	Ircserv::handleNick(const Message &m, size_t i)
 		_data[i].sendMsg(ERR_ERRONEUSNICKNAME(_data[i].getNick(), m.getParam(0)));
 	}
 	else if (!checkNickFree(m)) {
-		std::cout << "duplicit nickname: " << m.getParam(0) << std::endl;//remove
+		std::cout << "duplicit nickname: " << m.getParam(0) << std::endl;
 		_data[i].sendMsg(ERR_NICKNAMEINUSE(_data[i].getNick(), m.getParam(0)));
 	}
 	else if (!_data[i].isRegistered()) {
 		_data[i].setNick(m.getParam(0));
-		std::cout << "new client set their nick to: " << _data[i].getNick() << std::endl;//remove
+		std::cout << "new client set their nick to: " << _data[i].getNick() << std::endl;
 		if (_data[i].hasPassed() && !(_data[i].getUsername().empty()))
 		{
 			_data[i].setRegistered(true);

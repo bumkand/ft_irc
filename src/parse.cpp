@@ -25,7 +25,6 @@ static void parseParams(Message& m, const std::string& completeMessage, size_t s
 
 static Message parseMessage(const std::string& completeMessage)
 {
-	std::cout << "complete Message: " << completeMessage << std::endl;
 	Message m;
 	size_t start = 0;
 	size_t end = 0;
@@ -138,7 +137,7 @@ void Ircserv::handleMessage(const Message& m, size_t i)
 			break;
 		default:
 			_data[i].sendMsg(ERR_UNKNOWNCOMMAND(_data[i].getNick(), m.getCommand()));
-			std::cerr << "invalid cmd" << std::endl;
+			std::cout << "invalid cmd" << std::endl;
 	}
 }
 
@@ -150,6 +149,7 @@ void Ircserv::parse(size_t i)
 	{
 		std::string completeMessage = _data[i].getStr().substr(0, pos);
 		_data[i].eraseStr(0, pos + 2);
+		std::cout << " <-- got a message from: " << _data[i].getNick() << ", on fd: " << _data[i].getFD() << ", message content: " << completeMessage << std::endl;
 		Message m = parseMessage(completeMessage);
 		if (!m.getPrefix().empty() && my_tolower(m.getPrefix()) != my_tolower(_data[i].getNick()))
 		{
