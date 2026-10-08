@@ -10,6 +10,7 @@ Ircserv::Ircserv(const Ircserv& other) :
 	_serverSocket(other._serverSocket),
 	_port(other._port),
 	_serverAddress(other._serverAddress),
+	_password(other._password),
 	_clientSocket(other._clientSocket),
 	_activeClients(other._activeClients)
 {
@@ -28,6 +29,7 @@ Ircserv& Ircserv::operator=(const Ircserv& other)
 		_serverSocket = other._serverSocket;
 		_port = other._port;
 		_serverAddress = other._serverAddress;
+		_password = other._password;
 		_clientSocket = other._clientSocket;
 		_activeClients = other._activeClients;
 		for (int i = 0; i < MAX_CLIENTS; i++)
@@ -163,7 +165,6 @@ void	Ircserv::addNewClient()
 					std::string str;
 					s >> str;
 					_data[i].setHost(str);
-					std::cout << "IP ADDRESSSSSSS ====>>>> " << _data[i].getHost() << std::endl;
 					
 					added = 1;
 					std::cout << "New client on the slot " << _clientSocket << std::endl;
@@ -212,8 +213,6 @@ void	Ircserv::existClient()
 			else
 			{
 				_data[i].appendStr(buffer, recBite);
-				// std::cout << "Message from client fd " << _pfds[i].fd << "--> " << buffer << std::endl;
-				// std::cout << "String data from client fd " << _data[i].getFD() << "--> " << _data[i].getStr() << std::endl;
 				parse(i);
 			}
 		}
