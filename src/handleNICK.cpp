@@ -54,18 +54,19 @@ void	Ircserv::handleNick(const Message &m, size_t i)
 {
 	if (!(_data[i].getUsername().empty()) && !(_data[i].hasPassed())) {
 		_data[i].sendMsg(ERR_PASSWDMISMATCH(_data[i].getNick()));
+		std::cout << "wrong or missing server password" << std::endl;
 	}
 	else if (m.getParamSize() < 1 || m.getParam(0).empty()) {
 		_data[i].sendMsg(ERR_NONICKNAMEGIVEN(_data[i].getNick()));
+	}
+	else if (!checkNickValidity(m)) {
+		_data[i].sendMsg(ERR_ERRONEUSNICKNAME(_data[i].getNick(), m.getParam(0)));
 	}
 	else if (my_tolower(_data[i].getNick()) == my_tolower(m.getParam(0))) {
 		if (_data[i].isRegistered() && _data[i].getNick() != m.getParam(0))
 			announceNick(i, m.getParam(0)); // alice -> Alice, still has to be announced
 		else
 			_data[i].setNick(m.getParam(0));
-	}
-	else if (!checkNickValidity(m)) {
-		_data[i].sendMsg(ERR_ERRONEUSNICKNAME(_data[i].getNick(), m.getParam(0)));
 	}
 	else if (!checkNickFree(m)) {
 		std::cout << "duplicit nickname: " << m.getParam(0) << std::endl;

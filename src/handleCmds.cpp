@@ -24,8 +24,7 @@ void	Ircserv::handlePass(const Message &m, size_t i)
 	}
 	else if (m.getParam(0) != _password)
 	{
-		_data[i].sendMsg(ERR_PASSWDMISMATCH(_data[i].getNick()));
-		std::cout << "wrong server password" << std::endl;
+		_data[i].setPassed(false);
 	}
 	else
 	{
@@ -44,6 +43,7 @@ void	Ircserv::handleUser(const Message &m, size_t i)
 	}
 	else if (!(_data[i].getNick() == "*") && !(_data[i].hasPassed())) {
 		_data[i].sendMsg(ERR_PASSWDMISMATCH(_data[i].getNick()));
+		std::cout << "wrong or missing server password" << std::endl;
 	}
 	else {
 		_data[i].setUsername(m.getParam(0));
