@@ -18,18 +18,19 @@
 
 #define MAX_CLIENTS 100
 
+extern volatile sig_atomic_t checkSig;
 
 class	Ircserv
 {
 	private:
-		int			_serverSocket;
-		int			_port;
-		sockaddr_in	_serverAddress;
-		std::string	_password;
-		int			_clientSocket;
-		pollfd		_pfds[MAX_CLIENTS];
+		int				_serverSocket;
+		int				_port;
+		sockaddr_in		_serverAddress;
+		std::string		_password;
+		int				_clientSocket;
+		pollfd			_pfds[MAX_CLIENTS];
 		size_t			_activeClients;
-		ClientData	_data[MAX_CLIENTS];
+		ClientData		_data[MAX_CLIENTS];
 		ChannelManager	_channels; // all channels, jasmine's part
 		
 		void	handleMessage(const Message &m, size_t i);

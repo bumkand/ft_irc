@@ -46,7 +46,7 @@ Ircserv::~Ircserv()
 
 const char* Ircserv::ErrorException::what() const throw()
 {
-	return "Error";
+	return "Inicialization server error";
 }
 
 void	Ircserv::closeSocket()
@@ -56,7 +56,9 @@ void	Ircserv::closeSocket()
 
 void	signalHandler(int sig)
 {
-	std::cerr << "Server was termiated by " << sig << std::endl;
+	(void)sig;
+	//std::cerr << "Server was termiated by " << sig << std::endl;
+	checkSig = 1;
 }
 
 // Server socket initialization
@@ -125,7 +127,21 @@ void	Ircserv::servLoop()
 		ready = poll(_pfds, MAX_CLIENTS, -1);
 		if (ready < 0)
 		{
-			std::cerr << "Error in poll" << std::endl;
+			// Close opened FDs
+			for (int i = 0; i < MAX_CLIENTS; i++)
+			{
+				if (_pfds[i].fd < 0)
+					continue ;
+				close(_pfds[i].fd);
+				_pfds[i].fd = -1;
+			}
+			if (checkSig == 0)
+			{
+				std::cerr << "Error in poll" << std::endl;
+				return ;
+			}
+			else
+				std::cerr << "Server was shut down by signal" << std::endl;
 			return ;
 		}
 
@@ -134,7 +150,6 @@ void	Ircserv::servLoop()
 		
 		// Work with existing clients
 		existClient();
-		
 	}
 }
 

@@ -1,5 +1,7 @@
 #include "Ircserv.hpp"
 
+volatile sig_atomic_t	checkSig = 0;
+
 int	main(int arc, char *arv[])
 {
 	if (arc != 3)
@@ -19,7 +21,5 @@ int	main(int arc, char *arv[])
 	}
 	
 
-	
-	//close(_serverSocket);
 	return 0;
 }
