@@ -11,7 +11,7 @@
 // remember one change, so at the end everyone gets ONE line like "+it-k"
 static void addChange(ModeChanges &out, char sign, char m, const std::string &arg)
 {
-	if (out.lastSign != sign) // "+i+t" -> "+it", sign only when it changes
+	if (out.lastSign != sign) // "+i+t" > "+it", sign only when it changes
 	{
 		out.modes += sign;
 		out.lastSign = sign;
@@ -32,7 +32,7 @@ static void modeFlag(Channel *ch, char sign, char m, ModeChanges &out)
 	else
 		now = ch->isTopicOpOnly();
 	if (on == now)
-		return; // already like that -> nothing to announce
+		return; // already like that > nothing to announce
 	if (m == 'i')
 		ch->setInviteOnly(on);
 	else
@@ -40,10 +40,13 @@ static void modeFlag(Channel *ch, char sign, char m, ModeChanges &out)
 	addChange(out, sign, m, "");
 }
 
-// key can't be empty + no ',' (JOIN splits keys on ',' -> "a,b" could never match)
+// key can't be empty, no ',' and no ' ' > JOIN splits keys on ',' and params on ' ',
+// so "a,b" or "two words" could never match
 static bool isValidKey(const std::string &key)
 {
 	if (key.empty())
+		return (false);
+	if (key.find(' ') != std::string::npos)
 		return (false);
 	return (key.find(',') == std::string::npos);
 }
@@ -54,7 +57,7 @@ static void modeKey(Channel *ch, char sign, const std::string &arg, ModeChanges 
 	if (sign == '+')
 	{
 		if (!isValidKey(arg))
-			return; // "" or "a,b" -> ignore, nothing gets announced
+			return; // "", "a,b" or "two words" > ignore, nothing gets announced
 		ch->setKey(arg);
 		addChange(out, '+', 'k', arg);
 	}
@@ -65,7 +68,7 @@ static void modeKey(Channel *ch, char sign, const std::string &arg, ModeChanges 
 	}
 }
 
-// only digits + max 4 of them, so atoi can't overflow ("99999999999", "5abc" -> no)
+// only digits + max 4 of them, so atoi can't overflow ("99999999999", "5abc" > no)
 static bool isSmallNumber(const std::string &str)
 {
 	size_t i = 0;
@@ -87,10 +90,10 @@ static void modeLimit(Channel *ch, char sign, const std::string &arg, ModeChange
 	if (sign == '+')
 	{
 		if (!isSmallNumber(arg))
-			return; // "abc", "5abc", "-3", way too big -> ignore
+			return; // "abc", "5abc", "-3", way too big > ignore
 		int n = std::atoi(arg.c_str());
 		if (n <= 0)
-			return; // "0" -> makes no sense, ignore
+			return; // "0" > makes no sense, ignore
 		std::stringstream ss;
 		ss << n; // back to text, so "05" is sent as "5"
 		ch->setUserLimit(n);
@@ -119,13 +122,13 @@ void ChannelManager::modeOp(ClientData *c, Channel *ch, char sign,
 	else if (sign == '-' && ch->isOperator(target))
 		ch->removeOperator(target);
 	else
-		return; // already op / already not op -> nothing changed
+		return; // already op / already not op > nothing changed
 	addChange(out, sign, 'o', target->getNick());
 }
 
 // one mode letter > the right function
 void ChannelManager::applyOne(ClientData *c, Channel *ch, char sign, char m,
-							const std::string &arg, ModeChanges &out)
+							  const std::string &arg, ModeChanges &out)
 {
 	if (m == 'i' || m == 't')
 		modeFlag(ch, sign, m, out);
@@ -135,6 +138,6 @@ void ChannelManager::applyOne(ClientData *c, Channel *ch, char sign, char m,
 		modeLimit(ch, sign, arg, out);
 	else if (m == 'o')
 		modeOp(c, ch, sign, arg, out);
-	else if (m != 'b') // b = ban list, not in the subject -> just skip it quietly
+	else if (m != 'b') // b = ban list, not in the subject > just skip it quietly
 		c->sendMsg(ERR_UNKNOWNMODE(c->getNick(), m));
 }
