@@ -13,6 +13,7 @@ SRCS = main.cpp Ircserv.cpp ClientData.cpp \
 		ChannelPART.cpp ChannelPRIVMSG.cpp ChannelQUIT.cpp \
 		ChannelTOPIC.cpp ChannelKICK.cpp ChannelINVITE.cpp \
 		ChannelMODE.cpp ChannelMODEflags.cpp ChannelWHO.cpp \
+		Replies.cpp
 		
 
 OBJS = $(SRCS:%.cpp=$(OBJ_DIR)/%.o)

@@ -1,4 +1,5 @@
 #include "Ircserv.hpp"
+#include "Replies.hpp"
 
 Ircserv::Ircserv()
 {
@@ -77,6 +78,8 @@ void	Ircserv::initServ(char *arv[])
 		std::cerr << "Error: choose port between 1023 - 65535" << std::endl;
 		throw ErrorException();
 	}
+
+	_created = startTime(); // for 003 in the welcome burst
 
 	// Create the server socket
 	_serverSocket = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);

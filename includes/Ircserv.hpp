@@ -33,6 +33,7 @@ class	Ircserv
 		size_t			_activeClients;
 		ClientData		_data[MAX_CLIENTS];
 		ChannelManager	_channels; // all channels, jasmine's part
+		std::string		_created; // start time for 003
 		
 		void	handleMessage(const Message &m, size_t i);
 

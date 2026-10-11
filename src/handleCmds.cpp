@@ -7,7 +7,7 @@ void	Ircserv::welcomeSequence(size_t i)
 {
 	_data[i].sendMsg(RPL_WELCOME(_data[i].getNick(), _data[i].getFullMask()));
 	_data[i].sendMsg(RPL_YOURHOST(_data[i].getNick()));
-	_data[i].sendMsg(RPL_CREATED(_data[i].getNick()));
+	_data[i].sendMsg(RPL_CREATED(_data[i].getNick(), _created));
 	_data[i].sendMsg(RPL_MYINFO(_data[i].getNick()));
 	std::cout << "welcome sequence sent" << std::endl;
 }

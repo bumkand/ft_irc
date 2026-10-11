@@ -10,6 +10,8 @@
 
 #define SERVER_NAME "ircserv"
 
+std::string startTime(); // Replies.cpp, for 003
+
 // builds one numeric line. inline = body can live in a header,
 // even if many .cpp files include it (no "multiple definition" error)
 inline std::string numeric(const std::string &code,
@@ -29,8 +31,8 @@ inline std::string numeric(const std::string &code,
 // welcome burst = 001, 002, 003, 004
 #define RPL_WELCOME(nick, fullMask) numeric("001", nick, ":Welcome to the Internet Relay Network " + fullMask)
 #define RPL_YOURHOST(nick) numeric("002", nick, ":Your host is " SERVER_NAME ", running version ft_irc-1.0")
-// date = when ./ircserv was started, made once in initServ(). always UTC, not Prague time
-// (UTC is the same for everyone, Prague is UTC+1 in winter / UTC+2 in summer)
+	// date = when ./ircserv was started, made once in initServ(). always UTC, not Prague time
+	// (UTC is the same for everyone, Prague is UTC+1 in winter / UTC+2 in summer)
 #define RPL_CREATED(nick, date) numeric("003", nick, ":This server was created " + std::string(date))
 #define RPL_MYINFO(nick) numeric("004", nick, SERVER_NAME " ft_irc-1.0 - itkol")
 

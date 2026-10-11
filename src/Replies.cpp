@@ -1,9 +1,10 @@
 
 #include "Replies.hpp"
+#include <ctime>
 
 // current date + time as text, for RPL_CREATED (003)
 // gmtime = UTC on purpose, so it doesn't depend on the time zone of the machine
-static std::string startTime()
+std::string startTime()
 {
 	char buff[64];
 	time_t now = time(NULL);
