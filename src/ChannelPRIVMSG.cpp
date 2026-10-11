@@ -6,7 +6,7 @@
 // PRIVMSG / NOTICE Command (channel part only):
 // PRIVMSG #chan :text
 // kata already checked 411/412 and split "#a,#b", she calls this once per #target
-// notice = true -> NOTICE: same thing but never send errors back (RFC rule)
+// notice = true > NOTICE: same thing but never send errors back (RFC rule)
 
 void ChannelManager::privmsg(ClientData *c, const std::string &target,
 								const std::string &text, bool notice)

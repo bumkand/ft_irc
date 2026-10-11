@@ -5,8 +5,8 @@
 #include <sstream>
 
 // MODE Command:
-// MODE #chan                    -> show modes (324)
-// MODE #chan +itk-l secret      -> change them, only ops
+// MODE #chan > show modes (324)
+// MODE #chan +itk-l secret > change them, only ops
 // i = invite only, t = only ops change topic, k = key, l = user limit, o = give/take op
 // args are taken in order: +k key, +l number, +o / -o nick. -k and -l take nothing
 // the single modes (i t k l o) live in ChannelMODEflags.cpp

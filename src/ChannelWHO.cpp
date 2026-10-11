@@ -4,8 +4,8 @@
 #include "Replies.hpp"
 
 // WHO Command (simple version, no wildcards):
-// WHO #chan   -> one 352 line per member, then 315
-// WHO nick    -> one 352 line for him, then 315
+// WHO #chan > one 352 line per member, then 315
+// WHO nick > one 352 line for him, then 315
 // irssi sends "WHO #chan" after every join, without it irssi shows "421 Unknown command"
 
 // one 352 line: H = here (not away), @ = channel op

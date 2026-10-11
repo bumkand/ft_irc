@@ -110,5 +110,5 @@ Several modes can be combined in one command, e.g. `MODE #test +itk-l secret`. E
 - **Output buffers:** replies are never sent directly. They are added to the client's output buffer and sent only when `poll()` reports `POLLOUT`.
 - **Channels:** a `ChannelManager` owns all channels in a `std::map`, keyed by the lowercase name (`#Test` and `#test` are the same channel; the creator's spelling is kept for display). Each `Channel` keeps its members, operators and invited users as pointers to the clients, which live in a fixed array in the server, so the pointers stay valid.
 - **Disconnects:** on `QUIT` or a lost connection the client is removed from every channel and invite list *before* its slot is reused, so a new client never inherits someone else's channels or operator rights.
-- **Case-insensitive names:** nicks and channel names are compared with RFC 1459 casemapping (`[]\^` equal `{}|~`).
+- **Case-insensitive names:** nicks and channel names are compared with RFC 1459 casemapping (`[]\^={}|~`).
 - **MODE decisions:** invalid `+k` (empty or with `,`) and `+l` (not a number, `0`, more than 4 digits) are ignored. An invite only lets you past `+i`; the key and the user limit still apply.

@@ -4,9 +4,9 @@
 #include "Replies.hpp"
 
 // TOPIC Command:
-// TOPIC #chan          -> just show it: 332 (topic) or 331 (no topic)
-// TOPIC #chan :text    -> change it (if +t only ops can), everyone in the channel sees it
-// TOPIC #chan :        -> empty text = topic gets cleared
+// TOPIC #chan > just show it: 332 (topic) or 331 (no topic)
+// TOPIC #chan :text > change it (if +t only ops can), everyone in the channel sees it
+// TOPIC #chan : > empty text = topic gets cleared
 
 // only the channel name given > he just wants to see the topic
 static void showTopic(ClientData *c, Channel *ch)
