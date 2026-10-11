@@ -19,18 +19,22 @@ int	main(int arc, char *arv[])
 	signal(SIGQUIT, signalHandler);
 	signal(SIGPIPE, SIG_IGN);
 
+	bool success;
 	try
 	{
 		Ircserv	irc;
 		irc.initServ(arv);
 		std::cout << "Server inicialized and listening" << std::endl;
-		irc.servLoop();
+		success = irc.servLoop();
 	}
 	catch (const std::exception &e)
 	{
 		std::cerr << e.what() << std::endl;
+		return 1;
 	}
-	
-
-	return 0;
+	if (success)
+	{
+		return 0;
+	}
+	return 1;
 }

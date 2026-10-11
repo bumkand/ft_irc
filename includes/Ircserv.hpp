@@ -47,10 +47,14 @@ class	Ircserv
 		void	handleCap(const Message &m, size_t i);
 		void	handlePing(const Message &m, size_t i);
 		void	handleQuit(const Message &m, size_t i);
-		void	nickPrivMsg(const std::string &receiver, const std::string &msg, bool notice);
+		bool	nickPrivMsg(const std::string &receiver, const std::string &msg);
 		void	handlePrivMsg(const Message &m, size_t i, bool notice);
 
 		void 	parse(size_t i);
+
+		void	addNewClient();
+		void	existClient();
+		void	closeSocket();
 
 	public:
 		Ircserv();
@@ -58,18 +62,14 @@ class	Ircserv
 		Ircserv& operator=(const Ircserv& other);
 		virtual ~Ircserv();
 		void	initServ(char *arv[]);
-		void	servLoop();
-		void	addNewClient();
-		void	existClient();
+		bool	servLoop();
 
 		class ErrorException : public std::exception
 		{
 			const char* what() const throw();
 		};
-
-		void	closeSocket();
 };
 
-	void	signalHandler(int sig);
+void	signalHandler(int sig);
 
 #endif

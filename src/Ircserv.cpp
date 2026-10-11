@@ -73,9 +73,9 @@ void	Ircserv::initServ(char *arv[])
 	ss << arv[2];
 	ss >> _password;
 
-	if (_port < 1023 || _port > 65535)
+	if (_port < 1024 || _port > 65535)
 	{
-		std::cerr << "Error: choose port between 1023 - 65535" << std::endl;
+		std::cerr << "Error: choose port between 1024 - 65535" << std::endl;
 		throw ErrorException();
 	}
 
@@ -124,7 +124,7 @@ void	Ircserv::initServ(char *arv[])
 	_data[0].setStr("Server socket");
 }
 
-void	Ircserv::servLoop()
+bool	Ircserv::servLoop()
 {
 	// Poll and accept client connection in loop
 	int ready;
@@ -144,11 +144,10 @@ void	Ircserv::servLoop()
 			if (checkSig == 0)
 			{
 				std::cerr << "Error in poll" << std::endl;
-				return ;
 			}
 			else
 				std::cerr << "Server was shut down by signal" << std::endl;
-			return ;
+			return 0;
 		}
 
 		// Adding new client
