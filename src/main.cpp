@@ -6,6 +6,8 @@ int	main(int arc, char *arv[])
 {
 	if (arc != 3)
 		return std::cerr << "Wrong amount of arguments" << std::endl, 1;
+	if (strlen(arv[1]) == 0 || strlen(arv[1]) > 5)
+		return std::cerr << "Invalid port number" << std::endl, 1;
 	for (size_t i = 0; i < strlen(arv[1]); i++)
 	{
 		if (std::isdigit(arv[1][i]))
