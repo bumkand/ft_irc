@@ -174,7 +174,7 @@ void	Ircserv::addNewClient()
 
 					// Fill the _data[i]._host with the client IP address
 					char buff[INET_ADDRSTRLEN];
-					bzero(buff, INET_ADDRSTRLEN);
+					std::memset(buff, 0, INET_ADDRSTRLEN);
 					inet_ntop(AF_INET, &(clientAddress.sin_addr), buff, sizeof(buff));
 					std::stringstream s(buff);
 					std::string str;
@@ -205,7 +205,7 @@ void	Ircserv::existClient()
 		if (_pfds[i].revents & POLLIN)
 		{
 			char	buffer[1024];
-			bzero(buffer, 1024);
+			std::memset(buffer, 0, 1024);
 			ssize_t recBite = recv(_pfds[i].fd, buffer, sizeof(buffer), 0);
 			if (recBite == -1)
 			{
