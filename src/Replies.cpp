@@ -1,4 +1,5 @@
 
+#include "Replies.hpp"
 
 // current date + time as text, for RPL_CREATED (003)
 // gmtime = UTC on purpose, so it doesn't depend on the time zone of the machine
