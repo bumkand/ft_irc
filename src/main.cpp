@@ -6,7 +6,17 @@ int	main(int arc, char *arv[])
 {
 	if (arc != 3)
 		return std::cerr << "Wrong amount of arguments" << std::endl, 1;
+	for (size_t i = 0; i < strlen(arv[1]); i++)
+	{
+		if (std::isdigit(arv[1][i]))
+			continue ;
+		else
+			return std::cerr << "Invalid port number" << std::endl, 1;
+	}
+	if (strlen(arv[2]) == 0)
+		return std::cerr << "Missing password" << std::endl, 1;
 	signal(SIGINT, signalHandler);
+	signal(SIGPIPE, SIG_IGN);
 
 	try
 	{

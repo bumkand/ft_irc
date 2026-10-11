@@ -72,9 +72,9 @@ void	Ircserv::initServ(char *arv[])
 	ss << arv[2];
 	ss >> _password;
 
-	if (_port < 0 || _port > 65535)
+	if (_port < 1023 || _port > 65535)
 	{
-		std::cerr << "Error: choose port between 0 - 65535" << std::endl;
+		std::cerr << "Error: choose port between 1023 - 65535" << std::endl;
 		throw ErrorException();
 	}
 

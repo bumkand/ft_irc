@@ -7,6 +7,7 @@
 #include <sstream>
 #include <exception>
 #include <csignal>
+#include <cctype>
 #include <unistd.h>
 #include <poll.h>
 #include <netinet/in.h>
