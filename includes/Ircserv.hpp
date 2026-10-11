@@ -47,7 +47,7 @@ class	Ircserv
 		void	handleCap(const Message &m, size_t i);
 		void	handlePing(const Message &m, size_t i);
 		void	handleQuit(const Message &m, size_t i);
-		void	nickPrivMsg(const std::string &receiver, const std::string &msg);
+		void	nickPrivMsg(const std::string &receiver, const std::string &msg, bool notice);
 		void	handlePrivMsg(const Message &m, size_t i, bool notice);
 
 		void 	parse(size_t i);

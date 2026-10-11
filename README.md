@@ -1,5 +1,5 @@
-# ft_irc 💬
 *This project has been created as part of the 42 curriculum by jaandras, jlager and ksevciko.*
+# ft_irc 💬
 
 ## Description
 ft_irc is our own IRC (Internet Relay Chat) server, written in C++98. You connect to it with a real IRC client (our reference client is **irssi**) and use it like any official IRC server: register with a password and a nickname, send private messages, and talk in group channels.

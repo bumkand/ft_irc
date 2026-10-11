@@ -3,16 +3,20 @@
 #include "Message.hpp"
 #include "Replies.hpp"
 
-void Ircserv::nickPrivMsg(const std::string &receiver, const std::string &msg)
+void Ircserv::nickPrivMsg(const std::string &receiver, const std::string &msg, bool notice)
 {
-	for (size_t j = 0; j < MAX_CLIENTS; j++)
+	for (size_t j = 1; j < MAX_CLIENTS; j++)
 	{
-		if (_data[j].getFD() != -1 && my_tolower(receiver) == my_tolower(_data[j].getNick()))
+		if (_data[j].getFD() != -1 && _data[j].isRegistered() && my_tolower(receiver) == my_tolower(_data[j].getNick()))
 		{
 			_data[j].sendMsg(msg);
 			std::cout << "privmsg got send" << std::endl;
 			return;
 		}
+	}
+	if (!notice)
+	{
+		_data[i].sendMsg(ERR_NOSUCHNICK(_data[i].getNick()), receiver);
 	}
 }
 
@@ -54,7 +58,7 @@ void Ircserv::handlePrivMsg(const Message &m, size_t i, bool notice)
 			}
 			else
 			{
-				nickPrivMsg(receivers[j], ":" + _data[i].getFullMask() + " " + m.getCommand() + " " + receivers[j] + " :" + text + "\r\n");
+				nickPrivMsg(receivers[j], ":" + _data[i].getFullMask() + " " + m.getCommand() + " " + receivers[j] + " :" + text + "\r\n", notice);
 			}
 		}
 	}
