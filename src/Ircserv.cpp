@@ -82,12 +82,15 @@ void	Ircserv::initServ(char *arv[])
 	_created = startTime(); // for 003 in the welcome burst
 
 	// Create the server socket
-	_serverSocket = socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0);
+	_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_serverSocket < 0)
 	{
 		std::cerr << "Error creating socket" << std::endl;
 		throw ErrorException();
 	}
+	int	opt = 1;
+	setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+	fcntl(_serverSocket, F_SETFL, O_NONBLOCK);
 	// Defining server address
 	_serverAddress.sin_family = AF_INET;
 	_serverAddress.sin_port = htons(_port);
@@ -162,9 +165,10 @@ void	Ircserv::addNewClient()
 	{
 		sockaddr_in	clientAddress;
 		socklen_t	addr_len = sizeof(clientAddress);
-		_clientSocket = accept4(_serverSocket, (struct sockaddr*)&clientAddress, &addr_len, SOCK_NONBLOCK);
+		_clientSocket = accept(_serverSocket, (struct sockaddr*)&clientAddress, &addr_len);
 		if (_clientSocket != -1)
 		{
+			fcntl(_clientSocket, F_SETFL, O_NONBLOCK);
 			int	added = 0;
 			for (int i = 1; i < MAX_CLIENTS; i++)
 			{

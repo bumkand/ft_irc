@@ -8,6 +8,7 @@
 #include <exception>
 #include <csignal>
 #include <cctype>
+#include <fcntl.h>
 #include <unistd.h>
 #include <poll.h>
 #include <netinet/in.h>

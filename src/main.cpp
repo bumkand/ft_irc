@@ -16,6 +16,7 @@ int	main(int arc, char *arv[])
 	if (strlen(arv[2]) == 0)
 		return std::cerr << "Missing password" << std::endl, 1;
 	signal(SIGINT, signalHandler);
+	signal(SIGQUIT, signalHandler);
 	signal(SIGPIPE, SIG_IGN);
 
 	try
