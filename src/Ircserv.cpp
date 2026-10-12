@@ -68,8 +68,6 @@ void	Ircserv::initServ(char *arv[])
 	// Save port and password
 	std::stringstream	ss(arv[1]);
 	ss >> _port;
-	ss.str("");
-	ss.clear();
 	_password = arv[2];
 
 	if (_password.find(" ") != std::string::npos)
@@ -134,8 +132,8 @@ bool	Ircserv::servLoop()
 	int ready;
 	while (1)
 	{
-		ready = poll(_pfds, MAX_CLIENTS, -1);
-		if (ready < 0)
+		ready = poll(_pfds, MAX_CLIENTS, -1); // change -1 to 1000??
+		if (ready < 0 || checkSig == 1)
 		{
 			// Close opened FDs
 			for (int i = 0; i < MAX_CLIENTS; i++)
