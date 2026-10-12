@@ -70,9 +70,13 @@ void	Ircserv::initServ(char *arv[])
 	ss >> _port;
 	ss.str("");
 	ss.clear();
-	ss << arv[2];
-	ss >> _password;
+	_password = arv[2];
 
+	if (_password.find(" ") != std::string::npos)
+	{
+		std::cerr << "Error: Password cannot have spaces" << std::endl;
+		throw ErrorException();
+	}
 	if (_port < 1024 || _port > 65535)
 	{
 		std::cerr << "Error: choose port between 1024 - 65535" << std::endl;
