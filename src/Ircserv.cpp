@@ -144,10 +144,13 @@ bool	Ircserv::servLoop()
 			if (checkSig == 0)
 			{
 				std::cerr << "Error in poll" << std::endl;
+				return false;
 			}
 			else
+			{
 				std::cerr << "Server was shut down by signal" << std::endl;
-			return 0;
+				return true;
+			}
 		}
 
 		// Adding new client
